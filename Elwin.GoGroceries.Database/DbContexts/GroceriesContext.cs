@@ -1,0 +1,26 @@
+﻿using Elwin.GoGroceries.Domain.Models;
+using Elwin.GoGroceries.Infrastructure.Config;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+namespace Elwin.GoGroceries.Infrastructure.DbContexts;
+
+public class GroceriesContext : DbContext
+{
+    protected readonly InfrastructureSettings _settings;
+
+    public GroceriesContext(IOptions<InfrastructureSettings> settings)
+    {
+        _settings = settings.Value;
+    }
+
+    public DbSet<GroceryList> GroceryLists { get; set; }
+    public DbSet<GroceryItem> GroceryItems { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        => options.UseSqlServer(_settings.ConnectionString)
+                  .UseSnakeCaseNamingConvention();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        => modelBuilder.ApplyConfiguration(new GroceryListEntityTypeConfiguration());
+}

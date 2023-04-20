@@ -1,0 +1,42 @@
+﻿@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@page "/grocerylist/{id:guid}"
+
+<MudPaper Width="100%">
+    <MudList Clickable="true">
+        @if (groceryList?.ShoppingItems is not null)
+        {
+            @foreach (var item in groceryList.ShoppingItems)
+            {
+                <div style="display: flex; align-items: center;">
+                    <MudListItem Text="@item.Name" />
+                    <div style="width: 12%; display: flex; justify-content: center;">
+                        <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;"></MudIcon>
+                    </div>
+                </div>
+            }
+            <MudListItem Text="Add new" Icon="@Icons.Material.Filled.Add" OnClick="() => AddNew()"/>
+        }
+    </MudList>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private GroceryListDto? groceryList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"GroceryLists/{Id}");
+
+        groceryList = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<GroceryListDto>());
+    }
+
+    protected void AddNew()
+    {
+        Navigation.NavigateTo($"/groceryList/{Id}/add");
+    }
+}

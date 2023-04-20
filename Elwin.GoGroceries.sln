@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elwin.GoGroceries.API", "Elwin.GoGroceries\Server\Elwin.GoGroceries.API.csproj", "{860BB75E-45A4-407B-98B5-FE6E0ECB0658}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elwin.GoGroceries.Client", "Elwin.GoGroceries\Client\Elwin.GoGroceries.Client.csproj", "{020F328D-E429-4E93-B89D-51482EECE060}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elwin.GoGroceries.Contracts", "Elwin.GoGroceries.Contracts\Elwin.GoGroceries.Contracts.csproj", "{D61246FF-5AFB-4A66-A6A9-410DA407E543}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elwin.GoGroceries.Infrastructure", "Elwin.GoGroceries.Database\Elwin.GoGroceries.Infrastructure.csproj", "{B6DAE086-C77E-4715-81A8-3DEE1A261E7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elwin.GoGroceries.Domain", "Elwin.GoGroceries.Domain\Elwin.GoGroceries.Domain.csproj", "{3D13339B-2055-4B0D-A681-396BCAFA8582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elwin.GoGroceries.Core", "Elwin.GoGroceries.Core\Elwin.GoGroceries.Core.csproj", "{5C907462-72EF-4D50-9590-45E9B33944EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{860BB75E-45A4-407B-98B5-FE6E0ECB0658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{860BB75E-45A4-407B-98B5-FE6E0ECB0658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{860BB75E-45A4-407B-98B5-FE6E0ECB0658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{860BB75E-45A4-407B-98B5-FE6E0ECB0658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{020F328D-E429-4E93-B89D-51482EECE060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{020F328D-E429-4E93-B89D-51482EECE060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{020F328D-E429-4E93-B89D-51482EECE060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{020F328D-E429-4E93-B89D-51482EECE060}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D61246FF-5AFB-4A66-A6A9-410DA407E543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D61246FF-5AFB-4A66-A6A9-410DA407E543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D61246FF-5AFB-4A66-A6A9-410DA407E543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D61246FF-5AFB-4A66-A6A9-410DA407E543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6DAE086-C77E-4715-81A8-3DEE1A261E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DAE086-C77E-4715-81A8-3DEE1A261E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DAE086-C77E-4715-81A8-3DEE1A261E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DAE086-C77E-4715-81A8-3DEE1A261E7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D13339B-2055-4B0D-A681-396BCAFA8582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D13339B-2055-4B0D-A681-396BCAFA8582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D13339B-2055-4B0D-A681-396BCAFA8582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D13339B-2055-4B0D-A681-396BCAFA8582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C907462-72EF-4D50-9590-45E9B33944EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C907462-72EF-4D50-9590-45E9B33944EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C907462-72EF-4D50-9590-45E9B33944EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C907462-72EF-4D50-9590-45E9B33944EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {36F062AD-F861-4337-B24F-6A0A629F1210}
+	EndGlobalSection
+EndGlobal

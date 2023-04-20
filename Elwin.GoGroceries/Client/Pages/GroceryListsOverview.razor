@@ -1,0 +1,39 @@
+﻿@using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Client.Helpers;
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@page "/"
+
+<MudPaper Width="100%">
+
+    <CascadingValue Value="@groceryLists">
+        <MudList Clickable="true">
+            @foreach (var list in groceryLists)
+            {
+                <MudListItem Text="@list.Name" Icon="@Icons.Material.Filled.ShoppingBasket" OnClick="() => GoToShoppingList(list.Id)" />
+            }
+            <MudListItem Text="Add new" Icon="@Icons.Material.Filled.Add" OnClick="() => AddNew()"/>
+        </MudList>
+    </CascadingValue>
+</MudPaper>
+
+@code {
+    private IEnumerable<GroceryListDto>? groceryLists { get; set; } = new List<GroceryListDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync("GroceryLists");
+
+        groceryLists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<IEnumerable<GroceryListDto>>());
+    }
+
+    protected void GoToShoppingList(Guid id)
+    {
+        Navigation.NavigateTo($"/grocerylist/{id}");
+    }
+
+    protected void AddNew()
+    {
+        Navigation.NavigateTo($"/grocerylists/add");
+    }
+}

@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+@*Add the following components to your MainLayout.razor note that the ThemeProvider is essential for MudBlazor but the rest is optional.*@
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Color="Color.Tertiary">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIosNew" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
+        GoGroceries
+        <MudSpacer/>
+        <MudIcon Icon="@Icons.Material.Filled.MoreVert"></MudIcon>
+    </MudAppBar>
+    <MudMainContent >
+        <MudContainer MaxWidth="MaxWidth.Small">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("..");
+    }
+}

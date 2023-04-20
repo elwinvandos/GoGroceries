@@ -1,0 +1,39 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+
+@page "/grocerylist/{id:guid}/add"
+
+
+<MudPaper Width="100%" Class="pa-4">
+    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton>
+        </div>
+
+    </MudForm>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private MudForm? form { get; set; } = new MudForm();
+
+    private GroceryItemDto dto;
+
+    private bool success { get; set; }
+    private string[] errors { get; set; } = { };
+
+    protected async void Add()
+    {
+        var res = await Http.PostAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(dto));
+
+        if (res.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"/");
+        }
+    }
+}
