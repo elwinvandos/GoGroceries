@@ -9,7 +9,7 @@ public interface IGroceryRepository
     Task<GroceryList> FindAsync(Guid groceryListId);
     Task<ICollection<GroceryList>> GetAll();
     GroceryList Add(GroceryList groceryList);
-    Task<GroceryList> AddGroceryItemAsync(Guid groceryListId, GroceryItem groceryItem);
+    Task<GroceryList> AddGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem);
 }
 
 public class GroceryRepository : IGroceryRepository
@@ -35,17 +35,15 @@ public class GroceryRepository : IGroceryRepository
 
     public GroceryList Add(GroceryList groceryList)
     {
-        return _context.GroceryLists.Add(groceryList).Entity;
+        var entity = _context.GroceryLists.Add(groceryList).Entity;
+        _context.SaveChanges();
+        return entity;
     }
 
-    public async Task<GroceryList> AddGroceryItemAsync(Guid groceryListId, GroceryItem groceryItem)
+    public async Task<GroceryList> AddGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem)
     {
-        var groceryList = await _context.GroceryLists
-            .Include(gl => gl.GroceryItems)
-            .SingleOrDefaultAsync(gl => gl.Id == groceryListId);
-
         groceryList.AddGroceryItem(groceryItem);
-
+        await _context.SaveChangesAsync();
         return groceryList;
     }
 }

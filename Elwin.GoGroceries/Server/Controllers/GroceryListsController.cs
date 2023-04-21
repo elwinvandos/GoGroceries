@@ -36,8 +36,8 @@ public class GroceryListsController : Controller
     }
 
     [HttpPost("{id}")]
-    public async Task<GroceryListDto> PostGroceryItemAsync(Guid groceryListId, GroceryItemDto dto)
+    public async Task<GroceryListDto> PostGroceryItemAsync(Guid id, GroceryItemDto dto)
     {
-        return await _manageGroceryLists.AddGroceryItemToListAsync(groceryListId, dto);
+        return await _manageGroceryLists.AddGroceryItemToListAsync(id, dto);
     }
 }

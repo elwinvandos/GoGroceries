@@ -5,29 +5,23 @@
 
 @page "/grocerylists/add"
 
-@*<MudPaper Width="100%" Class="pa-4">
-    <EditForm Model="@dto" OnValidSubmit="PostShoppingList">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping list requires a name!" @bind-Value="dto.Name" For="@(() => dto.Name)"/>
-        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="mr-auto">Add</MudButton>
-        </div>
-    </EditForm>
-</MudPaper>*@
-
 <MudPaper Width="100%" Class="pa-4">
 
-    <EditForm Model="@dto" OnValidSubmit="PostShoppingList">
-        <InputText @bind-Value="dto.Name"></InputText>
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="mr-auto">Add</MudButton>
-    </EditForm>
+    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => PostShoppingList()">Add</MudButton>
+        </div>
 
+    </MudForm>
 </MudPaper>
 
-
-HALLO TEST
-
 @code {
-    private GroceryListDto dto = null!;
+    bool success;
+    string[] errors = { };
+    private MudForm? form { get; set; } = new();
+
+    private GroceryListDto dto = new();
 
     protected async void PostShoppingList()
     {

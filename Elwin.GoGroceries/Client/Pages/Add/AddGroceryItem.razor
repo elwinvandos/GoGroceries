@@ -20,12 +20,11 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    private MudForm? form { get; set; } = new MudForm();
-
-    private GroceryItemDto dto;
-
     private bool success { get; set; }
     private string[] errors { get; set; } = { };
+    private MudForm? form { get; set; } = new MudForm();
+
+    private GroceryItemDto dto = new();
 
     protected async void Add()
     {
@@ -33,7 +32,7 @@
 
         if (res.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo($"/");
+            Navigation.NavigateTo($"/grocerylist/{Id}");
         }
     }
 }

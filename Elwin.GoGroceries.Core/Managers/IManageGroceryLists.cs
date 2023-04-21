@@ -1,4 +1,5 @@
 ﻿using Elwin.GoGroceries.Contracts;
+using Elwin.GoGroceries.Core.Extensions;
 using Elwin.GoGroceries.Domain.Models;
 using Elwin.GoGroceries.Infrastructure.Repositories;
 
@@ -47,19 +48,13 @@ public class ManageGroceryLists : IManageGroceryLists
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
     {
-        var groceryList = await _groceryRepository.FindAsync(dto.Id);
-
-        if (groceryList is not null)
-        {
-            return GroceryList.ToDto(groceryList);
-        }
-
         //todo: proper validation
         if (string.IsNullOrEmpty(dto?.Name))
         {
             throw new ArgumentNullException(nameof(dto.Name));
         }
 
+        dto.Name = dto.Name.Capitalize();
         var res = _groceryRepository.Add(new GroceryList(dto.Name));
 
         return GroceryList.ToDto(res);
@@ -71,9 +66,9 @@ public class ManageGroceryLists : IManageGroceryLists
 
         //todo proper validation
         if (groceryList is null) throw new ArgumentNullException(nameof(groceryListId));
-        if (dto.Name is null) throw new ArgumentNullException(nameof(dto.Name));
+        if (string.IsNullOrEmpty(dto.Name)) throw new ArgumentNullException(nameof(dto.Name));
 
-        groceryList.AddGroceryItem(new GroceryItem(dto.Name));
+        await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name));
 
         return GroceryList.ToDto(groceryList);
     }
