@@ -1,8 +1,7 @@
 ﻿namespace Elwin.GoGroceries.Contracts
 {
-    public record GroceryItemDto
+    public record GroceryItemDto : NamedDtoBase
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
+
     }
 }

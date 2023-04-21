@@ -1,25 +1,12 @@
 ﻿@using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Client.Components;
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @page "/grocerylist/{id:guid}"
 
 <MudPaper Width="100%">
-    <MudList Clickable="true">
-        @if (groceryList?.ShoppingItems is not null)
-        {
-            @foreach (var item in groceryList.ShoppingItems)
-            {
-                <div style="display: flex; align-items: center;">
-                    <MudListItem Text="@item.Name" />
-                    <div style="width: 12%; display: flex; justify-content: center;">
-                        <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;"></MudIcon>
-                    </div>
-                </div>
-            }
-            <MudListItem Text="Add item" Icon="@Icons.Material.Filled.Add" OnClick="() => AddNew()"/>
-        }
-    </MudList>
+    <ListComponent Items="groceryList?.GroceryItems" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
 </MudPaper>
 
 @code {
@@ -38,5 +25,16 @@
     protected void AddNew()
     {
         Navigation.NavigateTo($"/groceryList/{Id}/add");
+    }
+
+    protected async Task Delete(Guid itemId)
+    {
+        var res = await Http.DeleteAsync($"GroceryLists/{Id}/{itemId}");
+
+        if (res.IsSuccessStatusCode)
+        {
+            groceryList?.GroceryItems?.Remove(groceryList.GroceryItems.Single(i => i.Id == itemId));
+            StateHasChanged();
+        }
     }
 }

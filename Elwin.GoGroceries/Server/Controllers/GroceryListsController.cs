@@ -18,7 +18,7 @@ public class GroceryListsController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<GroceryListDto> GetAsync(Guid id)
+    public async Task<ActionResult<GroceryListDto>> GetAsync(Guid id)
     {
         return await _manageGroceryLists.GetGroceryListAsync(id);
     }
@@ -30,14 +30,27 @@ public class GroceryListsController : Controller
     }
 
     [HttpPost]
-    public async Task<GroceryListDto> PostAsync(GroceryListDto dto)
+    public async Task<ActionResult<GroceryListDto>> PostAsync(GroceryListDto dto)
     {
         return await _manageGroceryLists.AddGroceryListAsync(dto);
     }
 
     [HttpPost("{id}")]
-    public async Task<GroceryListDto> PostGroceryItemAsync(Guid id, GroceryItemDto dto)
+    public async Task<ActionResult<GroceryListDto>> PostGroceryItemAsync(Guid id, GroceryItemDto dto)
     {
         return await _manageGroceryLists.AddGroceryItemToListAsync(id, dto);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(Guid id)
+    {
+        await _manageGroceryLists.DeleteGroceryListAsync(id);
+        return Ok();
+    }
+
+    [HttpDelete("{listId}/{itemId}")]
+    public async Task<ActionResult<GroceryListDto>> DeleteAsync(Guid listId, Guid itemId)
+    {
+        return await _manageGroceryLists.DeleteGroceryItemFromListAsync(listId, itemId);
     }
 }

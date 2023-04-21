@@ -17,8 +17,18 @@ public class GroceryList : Entity
     public void AddGroceryItem(GroceryItem item)
     {
         //todo: validation
-
         _groceryItems.Add(item);
+    }
+
+    public void DeleteGroceryItem(GroceryItem item)
+    {
+        //todo: validation
+        _groceryItems.Remove(item);
+    }
+
+    public void ClearGroceryItems()
+    {
+        _groceryItems.Clear();
     }
 
     public static GroceryListDto ToDto(GroceryList groceryList)
@@ -26,7 +36,7 @@ public class GroceryList : Entity
         return new GroceryListDto()
         {
             Id = groceryList.Id,
-            ShoppingItems = groceryList.GroceryItems.Select((x) => new GroceryItemDto() { Name = x.Name }),
+            GroceryItems = groceryList.GroceryItems.Select((x) => new GroceryItemDto() { Id = x.Id, Name = x.Name }).ToList(),
             Name = groceryList.Name
         };
     }

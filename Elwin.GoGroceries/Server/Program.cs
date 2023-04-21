@@ -1,8 +1,6 @@
 using Elwin.GoGroceries.API.Configurations;
 using Elwin.GoGroceries.Core.Extensions;
-using Elwin.GoGroceries.Infrastructure.Config;
 using Elwin.GoGroceries.Infrastructure.Extensions;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

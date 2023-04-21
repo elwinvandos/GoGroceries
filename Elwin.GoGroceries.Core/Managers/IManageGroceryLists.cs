@@ -10,7 +10,9 @@ public interface IManageGroceryLists
     Task<GroceryListDto> GetGroceryListAsync(Guid id);
     Task<ICollection<GroceryListDto>> GetAllGroceryLists();
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
-    Task<GroceryListDto> AddGroceryItemToListAsync(Guid groceryListId, GroceryItemDto dto);
+    Task<GroceryListDto> AddGroceryItemToListAsync(Guid listId, GroceryItemDto dto);
+    Task DeleteGroceryListAsync(Guid listId);
+    Task<GroceryListDto> DeleteGroceryItemFromListAsync(Guid listId, Guid itemId);
 }
 
 public class ManageGroceryLists : IManageGroceryLists
@@ -55,21 +57,40 @@ public class ManageGroceryLists : IManageGroceryLists
         }
 
         dto.Name = dto.Name.Capitalize();
-        var res = _groceryRepository.Add(new GroceryList(dto.Name));
+        var res = await _groceryRepository.AddAsync(new GroceryList(dto.Name));
 
         return GroceryList.ToDto(res);
     }
 
-    public async Task<GroceryListDto> AddGroceryItemToListAsync(Guid groceryListId, GroceryItemDto dto)
+    public async Task<GroceryListDto> AddGroceryItemToListAsync(Guid listId, GroceryItemDto dto)
     { 
-        var groceryList = await _groceryRepository.FindAsync(groceryListId);
+        var groceryList = await _groceryRepository.FindAsync(listId);
 
         //todo proper validation
-        if (groceryList is null) throw new ArgumentNullException(nameof(groceryListId));
+        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
         if (string.IsNullOrEmpty(dto.Name)) throw new ArgumentNullException(nameof(dto.Name));
 
+        dto.Name = dto.Name.Capitalize();
         await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name));
 
         return GroceryList.ToDto(groceryList);
+    }
+
+    public async Task DeleteGroceryListAsync(Guid listId)
+    {
+        var groceryList = await _groceryRepository.FindAsync(listId);
+        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
+
+        await _groceryRepository.DeleteAsync(groceryList);
+    }
+
+    public async Task<GroceryListDto> DeleteGroceryItemFromListAsync(Guid listId, Guid itemId)
+    {
+        var groceryList = await _groceryRepository.FindAsync(listId);
+        if (groceryList is null) throw new ArgumentNullException(nameof(itemId));
+
+        var item = groceryList.GroceryItems.Single(i => i.Id == itemId);
+        var res = await _groceryRepository.DeleteGroceryItemAsync(groceryList, item);
+        return GroceryList.ToDto(res);
     }
 }

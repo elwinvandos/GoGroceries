@@ -1,39 +1,40 @@
-﻿@using Elwin.GoGroceries.Contracts;
+﻿@using Elwin.GoGroceries.Client.Components
+@using Elwin.GoGroceries.Contracts;
 @using Elwin.GoGroceries.Client.Helpers;
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @page "/"
 
 <MudPaper Width="100%">
-
-    <CascadingValue Value="@groceryLists">
-        <MudList Clickable="true">
-            @foreach (var list in groceryLists)
-            {
-                <MudListItem Text="@list.Name" Icon="@Icons.Material.Filled.ShoppingBasket" OnClick="() => GoToShoppingList(list.Id)" />
-            }
-            <MudListItem Text="Add list" Icon="@Icons.Material.Filled.Add" OnClick="() => AddNew()"/>
-        </MudList>
-    </CascadingValue>
+    <ListComponent Items="groceryLists" OnAdd="AddNew" OnDelete="Delete" OnClickListItem="GoToGroceryList"></ListComponent>
 </MudPaper>
 
 @code {
-    private IEnumerable<GroceryListDto>? groceryLists { get; set; } = new List<GroceryListDto>();
+    private ICollection<GroceryListDto>? groceryLists { get; set; } = new List<GroceryListDto>();
 
     protected override async Task OnInitializedAsync()
     {
         var res = await Http.GetAsync("GroceryLists");
 
-        groceryLists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<IEnumerable<GroceryListDto>>());
+        groceryLists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<GroceryListDto>>());
+        StateHasChanged();
     }
 
-    protected void GoToShoppingList(Guid id)
+    protected async Task GoToGroceryList(Guid id)
     {
         Navigation.NavigateTo($"/grocerylist/{id}");
     }
 
-    protected void AddNew()
+    protected void AddNew() => Navigation.NavigateTo($"/grocerylists/add");
+
+    protected async Task Delete(Guid id)
     {
-        Navigation.NavigateTo($"/grocerylists/add");
+        var res = await Http.DeleteAsync($"GroceryLists/{id}");
+
+        if (res.IsSuccessStatusCode)
+        {
+            groceryLists?.Remove(groceryLists.Single(l => l.Id == id));
+            StateHasChanged();
+        }
     }
 }
