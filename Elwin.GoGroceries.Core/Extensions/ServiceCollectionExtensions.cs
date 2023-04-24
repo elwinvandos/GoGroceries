@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
     public static void AddCoreExtensions(this IServiceCollection services)
     {
         services.AddScoped<IManageGroceryLists, ManageGroceryLists>();
+        services.AddScoped<IManageCategories, ManageCategories>();
     }
 }
 

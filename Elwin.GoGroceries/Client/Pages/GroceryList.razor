@@ -6,7 +6,20 @@
 @page "/grocerylist/{id:guid}"
 
 <MudPaper Width="100%">
-    <ListComponent Items="groceryList?.GroceryItems" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
+    @if(categories is not null)
+    {
+        <MudExpansionPanels MultiExpansion="true">
+            @foreach(var category in categories)
+            {
+                <MudExpansionPanel Text="@category.Name">
+                    <ListComponent Items="groceryList?.GroceryItems?.Where(i => i.CategoryId == category.Id)" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
+                </MudExpansionPanel >
+            }
+            <MudExpansionPanel Text="Unassigned items">
+                <ListComponent Items="groceryList?.GroceryItems?.Where(i => i.CategoryId is null)" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
+            </MudExpansionPanel >
+        </MudExpansionPanels>
+    } 
 </MudPaper>
 
 @code {
@@ -14,12 +27,15 @@
     public Guid Id { get; set; }
 
     private GroceryListDto? groceryList { get; set; }
+    private IEnumerable<CategoryDto>? categories { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var res = await Http.GetAsync($"GroceryLists/{Id}");
+        var categoriesRes = await Http.GetAsync($"Categories");
+        categories = await HttpResultHelper.Process(categoriesRes, () => categoriesRes.Content.ReadFromJsonAsync<IEnumerable<CategoryDto>>());
 
-        groceryList = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<GroceryListDto>());
+        var groceryListRes = await Http.GetAsync($"GroceryLists/{Id}");
+        groceryList = await HttpResultHelper.Process(groceryListRes, () => groceryListRes.Content.ReadFromJsonAsync<GroceryListDto>());
     }
 
     protected void AddNew()

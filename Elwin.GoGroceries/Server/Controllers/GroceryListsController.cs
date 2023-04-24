@@ -1,4 +1,5 @@
 ﻿using Elwin.GoGroceries.Contracts;
+using Elwin.GoGroceries.Contracts.Post;
 using Elwin.GoGroceries.Core.Managers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,7 @@ public class GroceryListsController : Controller
     [HttpGet]
     public async Task<IEnumerable<GroceryListDto>> GetAllAsync()
     {
-        return await _manageGroceryLists.GetAllGroceryLists();
+        return await _manageGroceryLists.GetAllGroceryListsAsync();
     }
 
     [HttpPost]
@@ -36,7 +37,7 @@ public class GroceryListsController : Controller
     }
 
     [HttpPost("{id}")]
-    public async Task<ActionResult<GroceryListDto>> PostGroceryItemAsync(Guid id, GroceryItemDto dto)
+    public async Task<ActionResult<GroceryListDto>> PostGroceryItemAsync(Guid id, PostGroceryItemDto dto)
     {
         return await _manageGroceryLists.AddGroceryItemToListAsync(id, dto);
     }

@@ -8,6 +8,7 @@ public interface IGroceryRepository
 {
     Task<GroceryList> FindAsync(Guid groceryListId);
     Task<ICollection<GroceryList>> GetAll();
+    Task<ICollection<GroceryItem>> GetAllGroceryItems();
     Task<GroceryList> AddAsync(GroceryList groceryList);
     Task<GroceryList> AddGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem);
     Task DeleteAsync(GroceryList groceryList);
@@ -28,15 +29,16 @@ public class GroceryRepository : IGroceryRepository
         return await _context.GroceryLists.ToListAsync();
     }
 
-    public async Task<GroceryList> FindAsync(Guid groceryListId)
+    public async Task<ICollection<GroceryItem>> GetAllGroceryItems()
     {
-        var bla = await _context.GroceryLists
-            .Include(gl => gl.GroceryItems)
-            .SingleOrDefaultAsync(gl => gl.Id == groceryListId) ?? throw new ArgumentNullException(nameof(groceryListId));
+        return await _context.GroceryItems.ToListAsync();
+    }
 
+    public async Task<GroceryList> FindAsync(Guid listId)
+    {
         return await _context.GroceryLists
             .Include(gl => gl.GroceryItems)
-            .SingleOrDefaultAsync(gl => gl.Id == groceryListId) ?? throw new ArgumentNullException(nameof(groceryListId));
+            .SingleOrDefaultAsync(gl => gl.Id == listId) ?? throw new ArgumentNullException(nameof(listId));
     }
 
     public async Task<GroceryList> AddAsync(GroceryList groceryList)

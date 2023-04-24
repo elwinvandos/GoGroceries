@@ -16,6 +16,7 @@ public class GroceriesContext : DbContext
 
     public DbSet<GroceryList> GroceryLists { get; set; }
     public DbSet<GroceryItem> GroceryItems { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlServer(_settings.ConnectionString)
