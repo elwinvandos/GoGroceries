@@ -1,4 +1,4 @@
-﻿namespace Elwin.GoGroceries.Contracts
+﻿namespace Elwin.GoGroceries.Contracts.DtoBases
 {
     public record NamedDtoBase : DtoBase
     {

@@ -2,6 +2,7 @@
 @inject NavigationManager Navigation
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Contracts.Post;
 
 @page "/grocerylist/{id:guid}/add"
 
@@ -9,6 +10,13 @@
 <MudPaper Width="100%" Class="pa-4">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <MudSelect T="CategoryDto" Label="Category" @bind-Value="dto.Category">
+            @foreach(var category in categories)
+            {
+                <MudSelectItem Value="category"></MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField T="string" Label="Category name" HelperText="If you couldn't find your category, enter a new one here" @bind-Value="dto.Category.Name" />
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton>
         </div>
@@ -24,7 +32,16 @@
     private string[] errors { get; set; } = { };
     private MudForm? form { get; set; } = new MudForm();
 
-    private GroceryItemDto dto = new();
+    private ICollection<CategoryDto>? categories { get; set; } = new List<CategoryDto>();
+    private PostGroceryItemDto dto = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"Categories");
+
+        categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
+    }
 
     protected async void Add()
     {

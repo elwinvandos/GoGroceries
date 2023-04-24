@@ -10,5 +10,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<GroceriesContext>();
         services.AddScoped<IGroceryRepository, GroceryRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
 }

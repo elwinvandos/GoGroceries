@@ -1,3 +1,9 @@
-A simple grocery lists management app developed according to the principles of Clean Architecture and DDD
+A simple, mobile-first household groceries management app developed according to the principles of Clean Architecture and DDD
 
-Powered by .NET 7, ASP.NET Core and Blazor
+Tech stack:
+
+- .NET 7
+- ASP.NET Core 
+- Blazor
+- Entity Framework Core (code-first)
+- SQL Server

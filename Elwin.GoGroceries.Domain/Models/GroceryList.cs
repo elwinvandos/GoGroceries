@@ -1,6 +1,4 @@
-﻿using Elwin.GoGroceries.Contracts;
-
-namespace Elwin.GoGroceries.Domain.Models;
+﻿namespace Elwin.GoGroceries.Domain.Models;
 
 public class GroceryList : Entity
 {
@@ -29,15 +27,5 @@ public class GroceryList : Entity
     public void ClearGroceryItems()
     {
         _groceryItems.Clear();
-    }
-
-    public static GroceryListDto ToDto(GroceryList groceryList)
-    {
-        return new GroceryListDto()
-        {
-            Id = groceryList.Id,
-            GroceryItems = groceryList.GroceryItems.Select((x) => new GroceryItemDto() { Id = x.Id, Name = x.Name }).ToList(),
-            Name = groceryList.Name
-        };
     }
 }

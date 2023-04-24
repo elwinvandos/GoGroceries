@@ -1,4 +1,5 @@
 ﻿@using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Contracts.DtoBases;
 @typeparam TItem where TItem : NamedDtoBase
 
 <ul>
@@ -14,6 +15,7 @@
                     <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;" Class="delete-icon" @onclick="() => Delete(item.Id)" />
                 </div>
             </li>
+            <MudDivider />
         }
         <li @onclick="() => AddNew()">
             <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
