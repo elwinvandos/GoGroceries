@@ -6,17 +6,49 @@
 @page "/grocerylist/{id:guid}"
 
 <MudPaper Width="100%">
-    @if(categories is not null)
+    @if(categories is not null & groceryList?.GroceryItems is not null)
     {
         <MudExpansionPanels MultiExpansion="true">
             @foreach(var category in categories)
             {
                 <MudExpansionPanel Text="@category.Name">
-                    <ListComponent Items="groceryList?.GroceryItems?.Where(i => i.CategoryId == category.Id)" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
+                    <ul>
+                        @foreach(var item in groceryList.GroceryItems.Where(i => i.CategoryId == category.Id))
+                        {
+                            <ListItemComponent Item="item" OnDelete="Delete">
+                                <div style="display: flex; justify-content: space-around">
+                                    <div style="width: 30%">
+                                        @if(item.Quantity is not null)
+                                        {
+                                            <MudChip Variant="Variant.Text" Color="Color.Tertiary">@string.Concat("x", item.Quantity)</MudChip>
+                                        }
+                                    </div>
+                                    <div style="width: 70%">
+                                        @if(item.Weight is not null)
+                                        {
+                                            <MudChip Variant="Variant.Text" Color="Color.Info" Style="margin-left: 0.7rem;">@string.Concat(@item.Weight, "g")</MudChip>
+                                        }
+                                    </div>
+                                </div>
+                            </ListItemComponent>
+                            <MudDivider />
+                        }
+                        <li @onclick="() => AddNew()">
+                            <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
+                        </li>
+                    </ul>
                 </MudExpansionPanel >
             }
             <MudExpansionPanel Text="Unassigned items">
-                <ListComponent Items="groceryList?.GroceryItems?.Where(i => i.CategoryId is null)" OnAdd="AddNew" OnDelete="Delete"></ListComponent>
+                    <ul>
+                        @foreach(var item in groceryList.GroceryItems.Where(i => i.CategoryId is null))
+                        {
+                            <ListItemComponent Item="item" OnDelete="Delete"></ListItemComponent>
+                        }
+                        <li @onclick="() => AddNew()">
+                            <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
+                        </li>
+                    </ul>
             </MudExpansionPanel >
         </MudExpansionPanels>
     } 
