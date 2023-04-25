@@ -7,14 +7,7 @@
     {
         @foreach (var item in Items)
         {
-            <li Style="display: flex; align-items: center; justify-content: space-around;">
-                <div style="width: 88%;" @onclick="() => ClickListItem(item.Id)">
-                    @item.Name
-                </div>
-                <div style="width: 12%; display: flex; justify-content: center;">
-                    <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;" Class="delete-icon" @onclick="() => Delete(item.Id)" />
-                </div>
-            </li>
+            <ListItemComponent Item="item" OnClickListItem="ClickListItem" OnDelete="Delete"></ListItemComponent>
             <MudDivider />
         }
         <li @onclick="() => AddNew()">
@@ -31,15 +24,10 @@
     public EventCallback<Guid> OnClickListItem { get; set; }
 
     [Parameter]
-    public EventCallback OnAdd { get; set; }
-
-    [Parameter]
     public EventCallback<Guid> OnDelete { get; set; }
 
-    protected async Task AddNew()
-    {
-        await OnAdd.InvokeAsync();
-    }
+    [Parameter]
+    public EventCallback<Guid> OnAdd { get; set; }
 
     protected async Task Delete(Guid id)
     {
@@ -49,5 +37,10 @@
     protected async Task ClickListItem(Guid id)
     {
         await OnClickListItem.InvokeAsync(id);
+    }
+
+    protected async Task AddNew()
+    {
+        await OnAdd.InvokeAsync();
     }
 }

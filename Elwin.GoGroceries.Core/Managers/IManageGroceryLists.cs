@@ -48,7 +48,7 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<ICollection<GroceryItemDto>> GetAllGroceryItemsAsync()
     {
         var groceryItems = await _groceryRepository.GetAllGroceryItems();
-        return groceryItems.Select(i => new GroceryItemDto() { Id = i.Id, Name = i.Name, CategoryId = i.CategoryId }).ToList();
+        return groceryItems.Select(GroceryItemMapper.ToDto).ToList();
     }
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
@@ -75,15 +75,15 @@ public class ManageGroceryLists : IManageGroceryLists
 
         dto.Name = dto.Name.Capitalize();
 
-        if (dto.Category.Id != null)
+        if (dto.Category != null)
         {
-            await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name, dto.Category.Id));
+            await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name, dto.Category.Id, dto.Quantity, dto.Weight));
         }
         else
         {
             dto.Category.Name = dto.Category.Name.Capitalize();
             var category = await _categoryRepostiroy.AddAsync(new Category(dto.Category.Name));
-            await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name, category.Id));
+            await _groceryRepository.AddGroceryItemAsync(groceryList, new GroceryItem(dto.Name, category.Id, dto.Quantity, dto.Weight));
         }
 
         return GroceryListMapper.ToDto(groceryList);

@@ -10,6 +10,8 @@
 <MudPaper Width="100%" Class="pa-4">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <MudTextField T="int?" Label="Quantity" @bind-Value="dto.Quantity"/>
+        <MudTextField T="int?" Label="Weight in grams" @bind-Value="dto.Weight" />
         <MudSelect T="CategoryDto" Label="Category" @bind-Value="dto.Category">
             @foreach(var category in categories)
             {
@@ -18,7 +20,7 @@
         </MudSelect>
         <MudTextField T="string" Label="Category name" HelperText="If you couldn't find your category, enter a new one here" @bind-Value="dto.Category.Name" />
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton> 
         </div>
 
     </MudForm>

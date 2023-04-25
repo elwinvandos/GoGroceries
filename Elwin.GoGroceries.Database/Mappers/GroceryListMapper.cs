@@ -10,7 +10,7 @@ namespace Elwin.GoGroceries.Infrastructure.Mappers
             return new GroceryListDto()
             {
                 Id = groceryList.Id,
-                GroceryItems = groceryList.GroceryItems.Select((i) => new GroceryItemDto() { Id = i.Id, Name = i.Name, CategoryId = i.CategoryId }).ToList(),
+                GroceryItems = groceryList.GroceryItems.Select(GroceryItemMapper.ToDto).ToList(),
                 Name = groceryList.Name
             };
         }
