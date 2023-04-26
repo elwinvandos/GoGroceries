@@ -1,21 +1,21 @@
-﻿namespace Elwin.GoGroceries.Contracts
+﻿using Elwin.GoGroceries.Contracts.DtoBases;
+
+namespace Elwin.GoGroceries.Contracts
 {
-    public class CategoryDto
+    public record CategoryDto : NamedDtoBase
     {
         // NOTE: these overrides are required for mudblazor select to work properly.
-        // When we switch to Smart Search, remove all code below, re-inherit NamedDtoBase
-        // and convert the dto back to a record
+        // When we switch to Smart Search, remove these.
+        // We cannot override Equals in a record, as it is already overriden there.
+        // For now the MudSelect seems to be working without it.
         // see https://mudblazor.com/components/select
 
-        public Guid? Id { get; set; }
-        public string Name { get; set; }
-
         // Note: this is important so the MudSelect can compare pizzas
-        public override bool Equals(object o)
-        {
-            var other = o as CategoryDto;
-            return other?.Name == Name;
-        }
+        //public override bool Equals(object o)
+        //{
+        //    var other = o as CategoryDto;
+        //    return other?.Name == Name;
+        //}
 
         // Note: this is important too!
         public override int GetHashCode() => Name?.GetHashCode() ?? 0;
