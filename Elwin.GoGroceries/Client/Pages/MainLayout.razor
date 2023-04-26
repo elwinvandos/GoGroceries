@@ -11,7 +11,9 @@
         <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIosNew" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
         GoGroceries
         <MudSpacer/>
-        <MudIcon Icon="@Icons.Material.Filled.MoreVert"></MudIcon>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit">
+            <MudMenuItem Href="/emptycategories">Empty categories</MudMenuItem>
+        </MudMenu>
     </MudAppBar>
     <MudMainContent >
         <MudContainer MaxWidth="MaxWidth.Small">

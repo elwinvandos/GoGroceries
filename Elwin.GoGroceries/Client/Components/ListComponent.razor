@@ -10,9 +10,12 @@
             <ListItemComponent Item="item" OnClickListItem="ClickListItem" OnDelete="Delete"></ListItemComponent>
             <MudDivider />
         }
-        <li @onclick="() => AddNew()">
-            <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
-        </li>
+        @if (!HideAdd)
+        {
+            <li @onclick="() => AddNew()">
+                <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
+            </li>
+        }
     }
 </ul>
 
@@ -28,6 +31,9 @@
 
     [Parameter]
     public EventCallback<Guid> OnAdd { get; set; }
+
+    [Parameter]
+    public bool HideAdd { get; set; } = false;
 
     protected async Task Delete(Guid id)
     {

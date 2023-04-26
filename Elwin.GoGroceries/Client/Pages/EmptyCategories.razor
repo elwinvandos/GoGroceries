@@ -1,0 +1,34 @@
+﻿@inject HttpClient Http
+@using Elwin.GoGroceries.Client.Components
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+@page "/emptycategories";
+
+<MudPaper Width="100%" Class="pa-4">
+    <ListComponent Items="emptyCategories" HideAdd="true" OnDelete="Delete"></ListComponent>
+    @if(emptyCategories?.Count() == 0)
+    {
+        <center>There are currently no empty categories.</center>
+    }
+</MudPaper>
+
+@code {
+    private ICollection<CategoryDto>? emptyCategories { get; set; } = new List<CategoryDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"Categories/empty");
+        emptyCategories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
+    }
+
+    protected async Task Delete(Guid id)
+    {
+        var res = await Http.DeleteAsync($"Categories/{id}");
+
+        if (res.IsSuccessStatusCode)
+        {
+            emptyCategories?.Remove(emptyCategories.Single(l => l.Id == id));
+            StateHasChanged();
+        }
+    }
+}

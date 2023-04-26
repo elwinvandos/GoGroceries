@@ -28,7 +28,7 @@ namespace Elwin.GoGroceries.API.Controllers
         [Route("empty")]
         public async Task<IEnumerable<CategoryDto>> GetAllEmptyAsync()
         {
-            return await _manageCategories.GetAllCategoriesAsync();
+            return await _manageCategories.GetEmptyCategoriesAsync();
         }
 
         [HttpPost]
