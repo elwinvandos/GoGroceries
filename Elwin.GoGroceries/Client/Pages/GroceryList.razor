@@ -6,14 +6,14 @@
 @page "/grocerylist/{id:guid}"
 
 <MudPaper Width="100%">
-    @if(categories is not null & groceryList?.GroceryItems is not null)
+    @if(categories is not null & groceryList?.Products is not null)
     {
         <MudExpansionPanels MultiExpansion="true">
             @foreach(var category in categories)
             {
                 <MudExpansionPanel Text="@category.Name">
                     <ul>
-                        @foreach(var item in groceryList.GroceryItems.Where(i => i.CategoryId == category.Id))
+                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId == category.Id))
                         {
                             <ListItemComponent Item="item" OnDelete="Delete">
                                 <div style="display: flex; justify-content: space-around">
@@ -41,7 +41,7 @@
             }
             <MudExpansionPanel Text="Unassigned items">
                     <ul>
-                        @foreach(var item in groceryList.GroceryItems.Where(i => i.CategoryId is null))
+                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId is null))
                         {
                             <ListItemComponent Item="item" OnDelete="Delete"></ListItemComponent>
                         }
@@ -81,7 +81,7 @@
 
         if (res.IsSuccessStatusCode)
         {
-            groceryList?.GroceryItems?.Remove(groceryList.GroceryItems.Single(i => i.Id == itemId));
+            groceryList?.Products?.Remove(groceryList.Products.Single(i => i.Id == itemId));
             StateHasChanged();
         }
     }

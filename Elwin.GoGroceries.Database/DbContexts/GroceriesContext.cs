@@ -15,7 +15,7 @@ public class GroceriesContext : DbContext
     }
 
     public DbSet<GroceryList> GroceryLists { get; set; }
-    public DbSet<GroceryItem> GroceryItems { get; set; }
+    public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -23,5 +23,8 @@ public class GroceriesContext : DbContext
                   .UseSnakeCaseNamingConvention();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-        => modelBuilder.ApplyConfiguration(new GroceryListEntityTypeConfiguration());
+    {
+        modelBuilder.ApplyConfiguration(new GroceryListConfig());
+        modelBuilder.ApplyConfiguration(new GroceryListProductConfig());
+    }
 }

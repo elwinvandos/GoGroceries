@@ -7,12 +7,13 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories;
 public interface IGroceryRepository
 {
     Task<GroceryList> FindAsync(Guid groceryListId);
+    Task<Product> FindItemByNameAsync(string name);
     Task<ICollection<GroceryList>> GetAll();
-    Task<ICollection<GroceryItem>> GetAllGroceryItems();
+    Task<ICollection<Product>> GetAllProducts();
     Task<GroceryList> AddAsync(GroceryList groceryList);
-    Task<GroceryList> AddGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem);
+    Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem);
     Task DeleteAsync(GroceryList groceryList);
-    Task<GroceryList> DeleteGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem);
+    Task<GroceryList> RemoveProductAsync(GroceryList groceryList, GroceryListProduct listProduct);
 }
 
 public class GroceryRepository : IGroceryRepository
@@ -29,16 +30,23 @@ public class GroceryRepository : IGroceryRepository
         return await _context.GroceryLists.ToListAsync();
     }
 
-    public async Task<ICollection<GroceryItem>> GetAllGroceryItems()
+    public async Task<ICollection<Product>> GetAllProducts()
     {
-        return await _context.GroceryItems.ToListAsync();
+        return await _context.Products.ToListAsync();
     }
 
     public async Task<GroceryList> FindAsync(Guid listId)
     {
         return await _context.GroceryLists
-            .Include(gl => gl.GroceryItems)
-            .SingleOrDefaultAsync(gl => gl.Id == listId) ?? throw new ArgumentNullException(nameof(listId));
+            .Include(gl => gl.ListProducts)
+                .ThenInclude(lp => lp.Product)
+            .SingleOrDefaultAsync(gl => gl.Id == listId);
+    }
+
+    public async Task<Product> FindItemByNameAsync(string name)
+    {
+        return await _context.Products
+            .SingleOrDefaultAsync(i => i.Name == name);
     }
 
     public async Task<GroceryList> AddAsync(GroceryList groceryList)
@@ -48,23 +56,23 @@ public class GroceryRepository : IGroceryRepository
         return res.Entity;
     }
 
-    public async Task<GroceryList> AddGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem)
+    public async Task<GroceryList> AddProductAsync(GroceryList groceryList, Product product)
     {
-        groceryList.AddGroceryItem(groceryItem);
+        groceryList.AddProduct(product);
         await _context.SaveChangesAsync();
         return groceryList;
     }
 
     public async Task DeleteAsync(GroceryList groceryList)
     {
-        groceryList.ClearGroceryItems();
+        groceryList.ClearProducts();
         _context.GroceryLists.Remove(groceryList);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<GroceryList> DeleteGroceryItemAsync(GroceryList groceryList, GroceryItem groceryItem)
+    public async Task<GroceryList> RemoveProductAsync(GroceryList groceryList, GroceryListProduct listProduct)
     {
-        groceryList.DeleteGroceryItem(groceryItem);
+        groceryList.RemoveProduct(listProduct);
         await _context.SaveChangesAsync();
         return groceryList;
     }
