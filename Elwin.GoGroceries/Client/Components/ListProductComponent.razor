@@ -1,0 +1,40 @@
+﻿@using Elwin.GoGroceries.Contracts;
+
+<ListItemComponent Item="Product" OnDelete="Delete" OnClickListItem="ClickListItem">
+    <div style="display: flex; justify-content: space-around">
+        <div style="width: 30%">
+            @if (Product.Quantity is not null)
+            {
+                <MudChip Variant="Variant.Text" Color="Color.Tertiary">@string.Concat("x", Product.Quantity)</MudChip>
+            }
+        </div>
+        <div style="width: 70%">
+            @if (Product.Weight is not null)
+            {
+                <MudChip Variant="Variant.Text" Color="Color.Info" Style="margin-left: 0.7rem;">@string.Concat(@Product.Weight, "g")</MudChip>
+            }
+        </div>
+    </div>
+</ListItemComponent>
+<MudDivider />
+
+@code {
+    [Parameter]
+    public ProductDto Product { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnClickListItem { get; set; }
+
+    protected async Task Delete(Guid itemId)
+    {
+        await OnDelete.InvokeAsync(itemId);
+    }
+
+    protected async Task ClickListItem(Guid id)
+    {
+        await OnClickListItem.InvokeAsync(id);
+    }
+}

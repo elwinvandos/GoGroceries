@@ -13,25 +13,9 @@
             {
                 <MudExpansionPanel Text="@category.Name">
                     <ul>
-                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId == category.Id))
+                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                         {
-                            <ListItemComponent Item="item" OnDelete="Delete">
-                                <div style="display: flex; justify-content: space-around">
-                                    <div style="width: 30%">
-                                        @if(item.Quantity is not null)
-                                        {
-                                            <MudChip Variant="Variant.Text" Color="Color.Tertiary">@string.Concat("x", item.Quantity)</MudChip>
-                                        }
-                                    </div>
-                                    <div style="width: 70%">
-                                        @if(item.Weight is not null)
-                                        {
-                                            <MudChip Variant="Variant.Text" Color="Color.Info" Style="margin-left: 0.7rem;">@string.Concat(@item.Weight, "g")</MudChip>
-                                        }
-                                    </div>
-                                </div>
-                            </ListItemComponent>
-                            <MudDivider />
+                            <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
                         }
                         <li @onclick="() => AddNew()">
                             <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
@@ -39,19 +23,27 @@
                     </ul>
                 </MudExpansionPanel >
             }
-            <MudExpansionPanel Text="Unassigned items">
+            <MudExpansionPanel Text="Unassigned products">
                     <ul>
-                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId is null))
+                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff))
                         {
-                            <ListItemComponent Item="item" OnDelete="Delete"></ListItemComponent>
+                        <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
                         }
                         <li @onclick="() => AddNew()">
                             <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
                         </li>
                     </ul>
             </MudExpansionPanel >
+            <MudExpansionPanel Text="Checked off products">
+                    <ul style="text-decoration: line-through">
+                        @foreach(var item in groceryList.Products.Where(i => i.IsCheckedOff))
+                        {
+                        <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                        }
+                    </ul>
+            </MudExpansionPanel>
         </MudExpansionPanels>
-    } 
+    }  
 </MudPaper>
 
 @code {
@@ -75,13 +67,29 @@
         Navigation.NavigateTo($"/groceryList/{Id}/add");
     }
 
-    protected async Task Delete(Guid itemId)
+    protected async Task Delete(Guid productId)
     {
-        var res = await Http.DeleteAsync($"GroceryLists/{Id}/{itemId}");
+        var res = await Http.DeleteAsync($"GroceryLists/{Id}/{productId}");
 
         if (res.IsSuccessStatusCode)
         {
-            groceryList?.Products?.Remove(groceryList.Products.Single(i => i.Id == itemId));
+            groceryList?.Products?.Remove(groceryList.Products.Single(i => i.Id == productId));
+            StateHasChanged();
+        }
+    }
+
+    protected async Task ClickListItem(Guid productId)
+    {
+        var product = groceryList?.Products?.Single(i => i.Id == productId);
+        var res = await Http.PutAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(product));
+
+        if (res.IsSuccessStatusCode)
+        {
+            // Something to think about: is it more correct to find and update the original item, or update the item entirely?
+            // To update the item entirely without losing index, we must switch from using an ICollection to a List
+            var resProduct = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ProductDto>());
+            var originalProduct = groceryList?.Products?.Single(i => i.Id == resProduct?.Id);
+            originalProduct.IsCheckedOff = resProduct.IsCheckedOff;
             StateHasChanged();
         }
     }

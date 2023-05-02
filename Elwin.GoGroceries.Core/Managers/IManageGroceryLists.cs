@@ -11,11 +11,11 @@ public interface IManageGroceryLists
 {
     Task<GroceryListDto> GetGroceryListAsync(Guid id);
     Task<ICollection<GroceryListDto>> GetAllGroceryListsAsync();
-    Task<ICollection<ProductDto>> GetAllProductsAsync();
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
     Task DeleteGroceryListAsync(Guid listId);
     Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId);
+    Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId);
 }
 
 public class ManageGroceryLists : IManageGroceryLists
@@ -43,12 +43,6 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryLists = await _groceryRepository.GetAll();
         return groceryLists.Select(GroceryListMapper.ToDto).ToList();
-    }
-
-    public async Task<ICollection<ProductDto>> GetAllProductsAsync()
-    {
-        var products = await _groceryRepository.GetAllProducts();
-        return products.Select(ProductMapper.ToDto).ToList();
     }
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
@@ -102,6 +96,14 @@ public class ManageGroceryLists : IManageGroceryLists
         }
 
         return GroceryListMapper.ToDto(groceryList);
+    }
+
+    public async Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId)
+    {
+        var groceryList = await _groceryRepository.FindAsync(groceryListId);
+        if (groceryList is null) throw new ArgumentNullException(nameof(groceryListId));
+        var res = await _groceryRepository.PutProductAssignmentAsync(groceryList, productId);
+        return ProductMapper.ToDto(res);
     }
 
     public async Task DeleteGroceryListAsync(Guid listId)

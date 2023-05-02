@@ -20,5 +20,10 @@
             GroceryList = groceryList ?? throw new ArgumentNullException(nameof(groceryList));
             Product = product ?? throw new ArgumentNullException(nameof(product));
         }
+
+        public void ToggleIsCheckedOff() 
+        {
+            IsCheckedOff = !IsCheckedOff;
+        }
     }
 }
