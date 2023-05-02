@@ -33,7 +33,7 @@ namespace Elwin.GoGroceries.Core.Managers
         public async Task<ICollection<CategoryDto>> GetEmptyCategoriesAsync()
         {
             var categories = await _categoryRepository.GetAll();
-            var groceryItems = await _groceryRepositroy.GetAllGroceryItems();
+            var groceryItems = await _groceryRepositroy.GetAllProducts();
 
             var emptyCategories = new List<CategoryDto>();
 

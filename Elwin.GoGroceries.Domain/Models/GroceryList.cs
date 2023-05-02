@@ -4,28 +4,30 @@ public class GroceryList : Entity
 {
     public string Name { get; private set; }
 
-    private readonly List<GroceryItem> _groceryItems = new();
-    public IReadOnlyCollection<GroceryItem> GroceryItems => _groceryItems;
+    private readonly List<GroceryListProduct> _listProducts = new();
+    public virtual IReadOnlyCollection<GroceryListProduct> ListProducts => _listProducts;
 
     public GroceryList(string name)
     {
         Name = name;
     }
 
-    public void AddGroceryItem(GroceryItem item)
+    public void AddProduct(Product product)
     {
         //todo: validation
-        _groceryItems.Add(item);
+        var listProduct = new GroceryListProduct(this, product);
+        _listProducts.Add(listProduct);
+        product.AddListProduct(listProduct);
     }
 
-    public void DeleteGroceryItem(GroceryItem item)
+    public void RemoveProduct(GroceryListProduct listProduct)
     {
         //todo: validation
-        _groceryItems.Remove(item);
+        _listProducts.Remove(listProduct);
     }
 
-    public void ClearGroceryItems()
+    public void ClearProducts()
     {
-        _groceryItems.Clear();
+        _listProducts.Clear();
     }
 }
