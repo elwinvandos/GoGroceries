@@ -5,46 +5,57 @@
 @inject NavigationManager Navigation
 @page "/grocerylist/{id:guid}"
 
-<MudPaper Width="100%">
-    @if(categories is not null & groceryList?.Products is not null)
+
+@if(categories is not null & groceryList?.Products is not null)
+{
+    @if(groceryList?.Products?.Count() > 0)
     {
-        <MudExpansionPanels MultiExpansion="true">
-            @foreach(var category in categories)
-            {
-                <MudExpansionPanel Text="@category.Name">
-                    <ul>
-                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
-                        {
-                            <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                        }
-                        <li @onclick="() => AddNew()">
-                            <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
-                        </li>
-                    </ul>
-                </MudExpansionPanel >
-            }
-            <MudExpansionPanel Text="Unassigned products">
-                    <ul>
-                        @foreach(var item in groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff))
-                        {
-                        <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                        }
-                        <li @onclick="() => AddNew()">
-                            <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
-                        </li>
-                    </ul>
-            </MudExpansionPanel >
-            <MudExpansionPanel Text="Checked off products">
-                    <ul style="text-decoration: line-through">
-                        @foreach(var item in groceryList.Products.Where(i => i.IsCheckedOff))
-                        {
-                        <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                        }
-                    </ul>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
-    }  
-</MudPaper>
+        <MudPaper Width="100%">
+                <MudExpansionPanels MultiExpansion="true">
+                    @foreach (var category in categories)
+                    {
+                        <MudExpansionPanel Text="@category.Name">
+                            <ul>
+                                @foreach (var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
+                                {
+                                    <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                                }
+                                <li @onclick="() => AddNew()">
+                                    <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
+                                </li>
+                            </ul>
+                        </MudExpansionPanel>
+                    }
+                    <MudExpansionPanel Text="Unassigned products">
+                        <ul>
+                            @foreach (var item in groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff))
+                            {
+                                <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                            }
+                            <li @onclick="() => AddNew()">
+                                <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
+                            </li>
+                        </ul>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Checked off products">
+                        <ul style="text-decoration: line-through">
+                            @foreach (var item in groceryList.Products.Where(i => i.IsCheckedOff))
+                            {
+                                <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                            }
+                        </ul>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+        </MudPaper>
+
+    }
+    else
+    {
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => AddNew()">Add first product</MudButton>
+        </div>
+    }
+}  
 
 @code {
     [Parameter]
