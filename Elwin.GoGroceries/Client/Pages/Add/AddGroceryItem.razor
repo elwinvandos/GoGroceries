@@ -9,7 +9,7 @@
 
 <MudPaper Width="100%" Class="pa-4">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Immediate="true" />
         <MudNumericField @bind-Value="dto.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="10" />
         <MudTextField T="int?" Label="Weight in grams" @bind-Value="dto.Weight" />
         <MudSelect T="CategoryDto" Label="Category" @bind-Value="dto.Category">
@@ -30,7 +30,7 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    private bool success { get; set; }
+    private bool success { get; set; } = false;
     private string[] errors { get; set; } = { };
     private MudForm? form { get; set; } = new MudForm();
 

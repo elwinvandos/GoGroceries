@@ -8,7 +8,7 @@
 <MudPaper Width="100%" Class="pa-4">
 
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" />
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Immediate="true"/>
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => PostShoppingList()">Add</MudButton>
         </div>
@@ -17,8 +17,9 @@
 </MudPaper>
 
 @code {
-    bool success;
-    string[] errors = { };
+    private bool success { get; set; } = false;
+    private string[] errors { get; set; } = { };
+
     private MudForm? form { get; set; } = new();
 
     private GroceryListDto dto = new();
