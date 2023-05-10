@@ -6,13 +6,15 @@
 @page "/grocerylist/{id:guid}"
 
 
-@if(categories is not null & groceryList?.Products is not null)
+@if (categories is not null & groceryList?.Products is not null)
 {
-    @if(groceryList?.Products?.Count() > 0)
+    @if (groceryList?.Products?.Count() > 0)
     {
         <MudPaper Width="100%">
-                <MudExpansionPanels MultiExpansion="true">
-                    @foreach (var category in categories)
+            <MudExpansionPanels MultiExpansion="true">
+                @foreach (var category in categories)
+                {
+                    @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                     {
                         <MudExpansionPanel Text="@category.Name">
                             <ul>
@@ -26,9 +28,12 @@
                             </ul>
                         </MudExpansionPanel>
                     }
+                }
+                @if (unassignedProducts.Count() > 0)
+                {
                     <MudExpansionPanel Text="Unassigned products">
                         <ul>
-                            @foreach (var item in groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff))
+                            @foreach (var item in unassignedProducts)
                             {
                                 <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
                             }
@@ -37,17 +42,23 @@
                             </li>
                         </ul>
                     </MudExpansionPanel>
+                }
+                @if (checkedOffProducts.Count() > 0)
+                {
                     <MudExpansionPanel Text="Checked off products">
                         <ul style="text-decoration: line-through">
-                            @foreach (var item in groceryList.Products.Where(i => i.IsCheckedOff))
+                            @foreach (var item in checkedOffProducts)
                             {
                                 <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
                             }
                         </ul>
                     </MudExpansionPanel>
-                </MudExpansionPanels>
+                }
+            </MudExpansionPanels>
         </MudPaper>
-
+        <div style="display: flex; align-items: center; justify-content: center; margin-top: 0.5rem;">
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => AddNew()">Add product</MudButton>
+        </div>
     }
     else
     {
@@ -55,14 +66,17 @@
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => AddNew()">Add first product</MudButton>
         </div>
     }
-}  
+}
 
 @code {
     [Parameter]
     public Guid Id { get; set; }
 
-    private GroceryListDto? groceryList { get; set; }
+    private GroceryListDto groceryList { get; set; } = new() { Products = new List<ProductDto>() };
     private IEnumerable<CategoryDto>? categories { get; set; }
+
+    private IEnumerable<ProductDto> unassignedProducts => groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff);
+    private IEnumerable<ProductDto> checkedOffProducts => groceryList.Products.Where(i => i.IsCheckedOff);
 
     protected override async Task OnInitializedAsync()
     {
