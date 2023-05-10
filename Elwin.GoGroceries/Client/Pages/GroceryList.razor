@@ -22,7 +22,7 @@
                                 {
                                     <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
                                 }
-                                <li @onclick="() => AddNew()">
+                                <li @onclick="() => AddNew(category.Id)">
                                     <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
                                 </li>
                             </ul>
@@ -75,6 +75,11 @@
     protected void AddNew()
     {
         Navigation.NavigateTo($"/groceryList/{Id}/add");
+    }
+
+    protected void AddNew(Guid categoryId)
+    {
+        Navigation.NavigateTo($"/groceryList/{Id}/add/{categoryId}");
     }
 
     protected async Task Delete(Guid productId)
