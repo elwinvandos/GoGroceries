@@ -4,7 +4,7 @@
 @using Elwin.GoGroceries.Contracts;
 @using Elwin.GoGroceries.Contracts.Post;
 
-@page "/grocerylist/{id:guid}/add"
+@page "/grocerylist/{id:guid}/add/{categoryId:guid?}"
 
 
 <MudPaper Width="100%" Class="pa-4">
@@ -31,6 +31,9 @@
     [Parameter]
     public Guid Id { get; set; }
 
+    [Parameter]
+    public Guid? CategoryId { get; set; }
+
     private bool success { get; set; } = false;
     private string[] errors { get; set; } = { };
     private MudForm? form { get; set; } = new MudForm();
@@ -38,12 +41,15 @@
     private ICollection<CategoryDto>? categories { get; set; } = new List<CategoryDto>();
     private PostProductDto dto = new();
 
-
     protected override async Task OnInitializedAsync()
     {
         var res = await Http.GetAsync($"Categories");
-
         categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
+
+        if (CategoryId is not null)
+        {
+            dto.Category = categories.Single(c => c.Id == CategoryId);
+        }
     }
 
     protected async void Add()
