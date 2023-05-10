@@ -29,20 +29,6 @@
                         </MudExpansionPanel>
                     }
                 }
-                @if (unassignedProducts.Count() > 0)
-                {
-                    <MudExpansionPanel Text="Unassigned products">
-                        <ul>
-                            @foreach (var item in unassignedProducts)
-                            {
-                                <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                            }
-                            <li @onclick="() => AddNew()">
-                                <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
-                            </li>
-                        </ul>
-                    </MudExpansionPanel>
-                }
                 @if (checkedOffProducts.Count() > 0)
                 {
                     <MudExpansionPanel Text="Checked off products">
@@ -75,7 +61,6 @@
     private GroceryListDto groceryList { get; set; } = new() { Products = new List<ProductDto>() };
     private IEnumerable<CategoryDto>? categories { get; set; }
 
-    private IEnumerable<ProductDto> unassignedProducts => groceryList.Products.Where(i => i.CategoryId is null && !i.IsCheckedOff);
     private IEnumerable<ProductDto> checkedOffProducts => groceryList.Products.Where(i => i.IsCheckedOff);
 
     protected override async Task OnInitializedAsync()
