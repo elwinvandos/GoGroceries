@@ -18,7 +18,8 @@
                 <MudSelectItem Value="category"></MudSelectItem>
             }
         </MudSelect>
-        <MudTextField T="string" Label="Category name" HelperText="If you couldn't find your category, enter a new one here" @bind-Value="dto.Category.Name" />
+        <MudTextField T="string" Label="Category name" Required="true" RequiredError="Product must have a category!"
+            HelperText="If you couldn't find your category, enter a new one here" @bind-Value="dto.Category.Name" Immediate="true" />
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton> 
         </div>

@@ -8,9 +8,9 @@ public class Product : Entity
 
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct>? ListProducts { get; private set; }
-    public Guid? CategoryId { get; private set; }
+    public Guid CategoryId { get; private set; }
 
-    public Product(string name, Guid? categoryId, int? quantity = null, int? weight = null)
+    public Product(string name, Guid categoryId, int? quantity = null, int? weight = null)
     {
         Name = name;
         CategoryId = categoryId;
