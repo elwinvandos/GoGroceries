@@ -10,8 +10,9 @@
 <MudPaper Width="100%" Class="pa-4">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Immediate="true" />
-        <MudNumericField @bind-Value="dto.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="10" />
-        <MudTextField T="int?" Label="Weight in grams" @bind-Value="dto.Weight" />
+        <MudNumericField @bind-Value="dto.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="100" />
+        <MudTextField T="string" Label="Measurement" HelperText="For example: '400g' or 'cartons'" @bind-Value="dto.Measurement" />
+        <MudNumericField @bind-Value="dto.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
         <MudSelect T="CategoryDto" Label="Category" @bind-Value="dto.Category">
             @foreach(var category in categories)
             {

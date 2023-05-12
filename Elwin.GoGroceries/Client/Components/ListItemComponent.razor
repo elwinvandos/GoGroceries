@@ -8,11 +8,11 @@
     </div>
     @if (ChildContent is not null)
     {
-        <div style="width: 36%;">
+        <div style="width: 52%;">
             @ChildContent
         </div>
     }
-    <div style="width: 12%; display: flex; justify-content: center;">
+    <div style="width: 10%; display: flex; justify-content: center;">
         <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;" Class="delete-icon" @onclick="() => Delete(Item.Id)" />
     </div>
 </li>
@@ -30,7 +30,7 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string _nameWidth => ChildContent is null ? "width: 88%" : "width: 52%";
+    private string _nameWidth => ChildContent is null ? "width: 88%" : "width: 38%";
 
     protected async Task Delete(Guid id)
     {
