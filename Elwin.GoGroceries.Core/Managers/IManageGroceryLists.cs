@@ -88,7 +88,7 @@ public class ManageGroceryLists : IManageGroceryLists
         {
             dto.Name = dto.Name.Capitalize();
 
-            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name, categoryId, dto.Quantity, dto.Weight));
+            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name, categoryId, dto.Quantity, dto.Measurement, dto.MeasurementQuantity));
         }
         else
         {

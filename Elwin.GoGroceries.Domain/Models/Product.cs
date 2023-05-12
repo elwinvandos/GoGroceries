@@ -4,18 +4,20 @@ public class Product : Entity
 {
     public string Name { get; private set; }
     public int? Quantity { get; private set; }
-    public int? Weight { get; private set; }
+    public string? Measurement { get; private set; }
+    public int? MeasurementQuantity { get; private set; }
 
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct>? ListProducts { get; private set; }
     public Guid CategoryId { get; private set; }
 
-    public Product(string name, Guid categoryId, int? quantity = null, int? weight = null)
+    public Product(string name, Guid categoryId, int? quantity = null, string? measurement = null, int? measurementQuantity = null)
     {
         Name = name;
         CategoryId = categoryId;
         Quantity = quantity;
-        Weight = weight;
+        Measurement = measurement;
+        MeasurementQuantity = measurementQuantity;
     }
 
     public void AddListProduct(GroceryListProduct listProduct)

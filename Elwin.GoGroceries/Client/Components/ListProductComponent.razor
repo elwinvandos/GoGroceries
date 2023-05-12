@@ -1,17 +1,23 @@
 ﻿@using Elwin.GoGroceries.Contracts;
 
 <ListItemComponent Item="Product" OnDelete="Delete" OnClickListItem="ClickListItem">
-    <div style="display: flex; justify-content: space-around">
-        <div style="width: 30%">
+    <div style="display: flex; justify-content: space-between">
+        <div style="width: 25%">
             @if (Product.Quantity is not null)
             {
-                <MudChip Variant="Variant.Text" Color="Color.Tertiary">@string.Concat("x", Product.Quantity)</MudChip>
+                <MudChip Variant="Variant.Text" Size="Size.Small" Color="Color.Tertiary">@string.Concat("x", Product.Quantity)</MudChip>
             }
         </div>
-        <div style="width: 70%">
-            @if (Product.Weight is not null)
+        <div style="width: 45%">
+            @if (Product.Measurement is not null)
             {
-                <MudChip Variant="Variant.Text" Color="Color.Info" Style="margin-left: 0.7rem;">@string.Concat(@Product.Weight, "g")</MudChip>
+                <MudChip Variant="Variant.Text" Size="Size.Small" Color="Color.Info">@Product.Measurement</MudChip>
+            }
+        </div>
+        <div style="width: 30%">
+            @if (Product.MeasurementQuantity is not null)
+            {
+                <MudChip Variant="Variant.Text" Size="Size.Small" Color="Color.Info">@Product.MeasurementQuantity</MudChip>
             }
         </div>
     </div>

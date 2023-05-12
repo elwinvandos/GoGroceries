@@ -6,6 +6,7 @@ namespace Elwin.GoGroceries.Contracts.Post
     {
         public CategoryDto Category { get; set; } = new();
         public int? Quantity { get; set; }
-        public int? Weight { get; set; }
+        public string? Measurement { get; set; }
+        public int? MeasurementQuantity { get; set; }
     }
 }

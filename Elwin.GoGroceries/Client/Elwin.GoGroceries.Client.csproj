@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\ListProductComponent.razor.css" />
     <None Remove="Pages\GroceryList.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\ListProductComponent.razor.css" />
     <Content Include="Pages\GroceryList.razor.css" />
   </ItemGroup>
 

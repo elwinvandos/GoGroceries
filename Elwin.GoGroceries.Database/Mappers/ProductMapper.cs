@@ -11,10 +11,11 @@ namespace Elwin.GoGroceries.Infrastructure.Mappers
             {
                 Id = listProduct.Product.Id,
                 Name = listProduct.Product.Name,
-                Weight = listProduct.Product.Weight,
+                Measurement = listProduct.Product.Measurement,
+                MeasurementQuantity= listProduct.Product.MeasurementQuantity,
                 Quantity = listProduct.Product.Quantity,
                 CategoryId = listProduct.Product.CategoryId,
-                IsCheckedOff = listProduct.IsCheckedOff
+                IsCheckedOff = listProduct.IsCheckedOff,
             };
         }
     }
