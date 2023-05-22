@@ -12,9 +12,9 @@
         }
         @if (!HideAdd)
         {
-            <li @onclick="() => AddNew()">
-                <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add
-            </li>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Style="margin: 0.5rem;" @onclick="() => AddNew()">
+                Add
+            </MudButton>
         }
     }
 </ul>
