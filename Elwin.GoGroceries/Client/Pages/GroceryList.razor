@@ -16,16 +16,21 @@
                 {
                     @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                     {
-                        <MudExpansionPanel Text="@category.Name">
-                            <ul>
-                                @foreach (var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
-                                {
-                                    <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                                }
-                                <li @onclick="() => AddNew(category.Id)">
-                                    <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon> Add item
-                                </li>
-                            </ul>
+                        <MudExpansionPanel IsInitiallyExpanded="true">
+                            <TitleContent>
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>@category.Name</span>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Tertiary" @onclick="() => AddNew(category.Id)"></MudIconButton>
+                                </div>
+                            </TitleContent>
+                            <ChildContent>
+                                <ul>
+                                    @foreach (var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
+                                    {
+                                        <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                                    }
+                                </ul>
+                            </ChildContent>
                         </MudExpansionPanel>
                     }
                 }
@@ -43,7 +48,7 @@
             </MudExpansionPanels>
         </MudPaper>
         <div style="display: flex; align-items: center; justify-content: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => AddNew()">Add product</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="() => AddNew()">Add product</MudButton>
         </div>
     }
     else
