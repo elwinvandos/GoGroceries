@@ -8,6 +8,9 @@
         public Guid ProductId { get; private set; }
         public Product Product { get; private set; }
 
+        public int? Quantity { get; private set; }
+        public string? Measurement { get; private set; }
+        public int? MeasurementQuantity { get; private set; }
         public bool IsCheckedOff { get; private set; } = false;
 
         private GroceryListProduct()
@@ -15,10 +18,13 @@
 
         }
 
-        public GroceryListProduct(GroceryList groceryList, Product product)
+        public GroceryListProduct(GroceryList groceryList, Product product, int? quantity = null, string? measurement = null, int? measurementQuantity = null)
         {
             GroceryList = groceryList ?? throw new ArgumentNullException(nameof(groceryList));
             Product = product ?? throw new ArgumentNullException(nameof(product));
+            Quantity = quantity;
+            Measurement = measurement;
+            MeasurementQuantity = measurementQuantity;
         }
 
         public void ToggleIsCheckedOff() 

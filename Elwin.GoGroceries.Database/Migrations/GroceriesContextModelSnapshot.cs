@@ -77,9 +77,21 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_checked_off");
 
+                    b.Property<string>("Measurement")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("measurement");
+
+                    b.Property<int?>("MeasurementQuantity")
+                        .HasColumnType("int")
+                        .HasColumnName("measurement_quantity");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("product_id");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity");
 
                     b.HasKey("Id")
                         .HasName("pk_grocery_list_product");
@@ -104,22 +116,10 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("category_id");
 
-                    b.Property<string>("Measurement")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("measurement");
-
-                    b.Property<int?>("MeasurementQuantity")
-                        .HasColumnType("int")
-                        .HasColumnName("measurement_quantity");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("name");
-
-                    b.Property<int?>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
 
                     b.HasKey("Id")
                         .HasName("pk_products");

@@ -16,7 +16,7 @@
                 {
                     @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                     {
-                        <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode}80;")">
+                        <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")">
                             <TitleContent>
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
                                     <span>@category.Name</span>

@@ -16,7 +16,8 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    color_code = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -41,9 +42,7 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: true),
-                    weight = table.Column<int>(type: "int", nullable: true),
-                    category_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    category_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,6 +56,9 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     grocery_list_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     product_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    quantity = table.Column<int>(type: "int", nullable: true),
+                    measurement = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    measurement_quantity = table.Column<int>(type: "int", nullable: true),
                     is_checked_off = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

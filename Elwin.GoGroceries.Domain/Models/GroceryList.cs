@@ -12,10 +12,10 @@ public class GroceryList : Entity
         Name = name;
     }
 
-    public void AddProduct(Product product)
+    public void AddProduct(Product product, int? quantity, string? measurement, int? measurementQuantity)
     {
         //todo: validation
-        var listProduct = new GroceryListProduct(this, product);
+        var listProduct = new GroceryListProduct(this, product, quantity, measurement, measurementQuantity);
         _listProducts.Add(listProduct);
         product.AddListProduct(listProduct);
     }
