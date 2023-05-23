@@ -4,6 +4,7 @@ using Elwin.GoGroceries.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elwin.GoGroceries.Infrastructure.Migrations
 {
     [DbContext(typeof(GroceriesContext))]
-    partial class GroceriesContextModelSnapshot : ModelSnapshot
+    [Migration("20230523071621_AddColorToCategory")]
+    partial class AddColorToCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,7 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("ColorCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("color_code");
 

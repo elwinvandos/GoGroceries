@@ -1,0 +1,40 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+@page "/categories";
+
+<MudPaper Width="100%">
+    <ListComponent Items="categories" OnDelete="Delete" OnAdd="Add"></ListComponent>
+    @if (categories?.Count() == 0)
+    {
+        <center>There are currently no categories.</center>
+    }
+</MudPaper>
+
+@code {
+    private ICollection<CategoryDto>? categories { get; set; } = new List<CategoryDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"Categories");
+        categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
+    }
+
+    protected async Task Delete(Guid id)
+    {
+        var res = await Http.DeleteAsync($"Categories/{id}");
+
+        if (res.IsSuccessStatusCode)
+        {
+            categories?.Remove(categories.Single(l => l.Id == id));
+            StateHasChanged();
+        }
+    }
+
+    protected async void Add()
+    {
+        Navigation.NavigateTo($"/categories/add");
+    }
+}

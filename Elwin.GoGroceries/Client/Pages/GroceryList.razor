@@ -16,11 +16,11 @@
                 {
                     @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                     {
-                        <MudExpansionPanel IsInitiallyExpanded="true">
+                        <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode}80;")">
                             <TitleContent>
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
                                     <span>@category.Name</span>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Tertiary" @onclick="() => AddNew(category.Id)"></MudIconButton>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Tertiary" @onclick="() => AddNew(category.Id)" Size="Size.Small" Style="margin-right: 1rem;"></MudIconButton>
                                 </div>
                             </TitleContent>
                             <ChildContent>

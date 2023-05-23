@@ -74,7 +74,7 @@ public class ManageGroceryLists : IManageGroceryLists
         if (dto.Category is null || dto.Category.Id == Guid.Empty)
         {
             dto.Category.Name = dto.Category.Name.Capitalize();
-            var category = await _categoryRepostiroy.AddAsync(new Category(dto.Category.Name));
+            var category = await _categoryRepostiroy.AddAsync(new Category(dto.Category.Name, dto.Category.ColorCode));
             categoryId = category.Id;
         }
         else
