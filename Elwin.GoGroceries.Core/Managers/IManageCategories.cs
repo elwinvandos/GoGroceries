@@ -27,7 +27,7 @@ namespace Elwin.GoGroceries.Core.Managers
         public async Task<ICollection<CategoryDto>> GetAllCategoriesAsync()
         {
             var categories = await _categoryRepository.GetAll();
-            return categories.Select(category => new CategoryDto() { Id = category.Id, Name = category.Name }).ToList();
+            return categories.Select(category => new CategoryDto() { Id = category.Id, Name = category.Name, ColorCode = category.ColorCode }).ToList();
         }
 
         public async Task<ICollection<CategoryDto>> GetEmptyCategoriesAsync()
@@ -41,7 +41,7 @@ namespace Elwin.GoGroceries.Core.Managers
             {
                 if (!groceryItems.Select(i => i.CategoryId).Contains(category.Id))
                 {
-                    emptyCategories.Add(new CategoryDto() { Id = category.Id, Name = category.Name });
+                    emptyCategories.Add(new CategoryDto() { Id = category.Id, Name = category.Name, ColorCode = category.ColorCode });
                 }
             }
 
@@ -56,9 +56,9 @@ namespace Elwin.GoGroceries.Core.Managers
             }
 
             dto.Name = dto.Name.Capitalize();
-            var res = await _categoryRepository.AddAsync(new Category(dto.Name));
+            var res = await _categoryRepository.AddAsync(new Category(dto.Name, dto.ColorCode));
 
-            return new CategoryDto() { Id = res.Id, Name = res.Name };
+            return new CategoryDto() { Id = res.Id, Name = res.Name, ColorCode = res.ColorCode };
         }
 
         public async Task DeleteCategoryAsync(Guid categoryId)

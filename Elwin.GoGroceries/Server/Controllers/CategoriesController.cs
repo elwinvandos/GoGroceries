@@ -37,7 +37,7 @@ namespace Elwin.GoGroceries.API.Controllers
             return await _manageCategories.AddCategoryAsync(dto);
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<CategoryDto>> DeleteAsync(Guid id)
         {
             await _manageCategories.DeleteCategoryAsync(id);
