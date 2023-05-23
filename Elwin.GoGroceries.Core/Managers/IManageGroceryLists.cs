@@ -88,11 +88,11 @@ public class ManageGroceryLists : IManageGroceryLists
         {
             dto.Name = dto.Name.Capitalize();
 
-            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name, categoryId, dto.Quantity, dto.Measurement, dto.MeasurementQuantity));
+            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name, categoryId), dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
         }
         else
         {
-            await _groceryRepository.AddProductAsync(groceryList, product);
+            await _groceryRepository.AddProductAsync(groceryList, product, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
         }
 
         return GroceryListMapper.ToDto(groceryList);

@@ -27,7 +27,7 @@
         @if (!string.IsNullOrEmpty(dto.Category.Name))
         {
             <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="dto.Category.ColorCode" Style="@($"color: {dto.Category.ColorCode};")" 
-            Placeholder="Pick a color" ColorPickerView="ColorPickerView.Palette"/>
+            Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum"/>
         }
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton> 

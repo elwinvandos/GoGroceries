@@ -11,7 +11,7 @@ public interface IGroceryRepository
     Task<ICollection<GroceryList>> GetAll();
     Task<ICollection<Product>> GetAllProducts();
     Task<GroceryList> AddAsync(GroceryList groceryList);
-    Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem);
+    Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem, int? quantity, string? measurement, int? measurementQuantity);
     Task DeleteAsync(GroceryList groceryList);
     Task<GroceryList> RemoveProductAsync(GroceryList groceryList, GroceryListProduct listProduct);
     Task<GroceryListProduct> PutProductAssignmentAsync(GroceryList groceryList, Guid productId);
@@ -57,9 +57,9 @@ public class GroceryRepository : IGroceryRepository
         return res.Entity;
     }
 
-    public async Task<GroceryList> AddProductAsync(GroceryList groceryList, Product product)
+    public async Task<GroceryList> AddProductAsync(GroceryList groceryList, Product product, int? quantity, string? measurement, int? measurementQuantity)
     {
-        groceryList.AddProduct(product);
+        groceryList.AddProduct(product, quantity, measurement, measurementQuantity);
         await _context.SaveChangesAsync();
         return groceryList;
     }

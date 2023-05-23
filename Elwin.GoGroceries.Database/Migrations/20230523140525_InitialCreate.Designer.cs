@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elwin.GoGroceries.Infrastructure.Migrations
 {
     [DbContext(typeof(GroceriesContext))]
-    [Migration("20230427160017_InitialCreate")]
+    [Migration("20230523140525_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,6 +31,10 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
+
+                    b.Property<string>("ColorCode")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("color_code");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -76,9 +80,21 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("is_checked_off");
 
+                    b.Property<string>("Measurement")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("measurement");
+
+                    b.Property<int?>("MeasurementQuantity")
+                        .HasColumnType("int")
+                        .HasColumnName("measurement_quantity");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("product_id");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity");
 
                     b.HasKey("Id")
                         .HasName("pk_grocery_list_product");
@@ -99,7 +115,7 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("category_id");
 
@@ -107,14 +123,6 @@ namespace Elwin.GoGroceries.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("name");
-
-                    b.Property<int?>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
-
-                    b.Property<int?>("Weight")
-                        .HasColumnType("int")
-                        .HasColumnName("weight");
 
                     b.HasKey("Id")
                         .HasName("pk_products");

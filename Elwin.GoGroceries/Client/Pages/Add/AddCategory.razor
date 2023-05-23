@@ -10,7 +10,7 @@
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
         <MudTextField T="string" Label="Name" Required="true" RequiredError="Category requires a name!" @bind-Value="dto.Name" Immediate="true" Style="margin-bottom: 1rem;"/>
         <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="dto.ColorCode" Style="@($"color: {dto.ColorCode};")" 
-        Placeholder="Select Color" ColorPickerView="ColorPickerView.Palette" />
+        Placeholder="Select Color" ColorPickerView="ColorPickerView.Spectrum" />
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton>
         </div>
