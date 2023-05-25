@@ -9,7 +9,7 @@
 
 <MudPaper Width="100%" Class="pa-4">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Immediate="true" />
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Validation="@(new Func<string, Task<string>>(CheckNameDuplicate))" />
         <MudNumericField @bind-Value="dto.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="100" />
         <MudTextField T="string" Label="Measurement" HelperText="For example: '400g' or 'cartons'" @bind-Value="dto.Measurement"/>
         @if (!string.IsNullOrEmpty(dto.Measurement))
@@ -69,5 +69,17 @@
         {
             Navigation.NavigateTo($"/grocerylist/{Id}");
         }
+    }
+
+    protected async Task<string> CheckNameDuplicate(string name)
+    {
+        if (!string.IsNullOrEmpty(name))
+        {
+            var res = await Http.GetAsync($"GroceryLists/checkProductExists/{Id}/{name}");
+            var exists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<bool>());
+
+            if (exists) return "Product name already exists.";
+        }
+        return null;
     }
 }
