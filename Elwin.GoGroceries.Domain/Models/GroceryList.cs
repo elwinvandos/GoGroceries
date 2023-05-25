@@ -1,33 +1,34 @@
 ﻿namespace Elwin.GoGroceries.Domain.Models;
 
-public class GroceryList : Entity
+public class GroceryList : NamedEntity
 {
-    public string Name { get; private set; }
-
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct> ListProducts => _listProducts;
 
-    public GroceryList(string name)
+    public GroceryList(string name) : base(name)
     {
-        Name = name;
+
     }
 
     public void AddProduct(Product product, int? quantity, string? measurement, int? measurementQuantity)
     {
-        //todo: validation
         var listProduct = new GroceryListProduct(this, product, quantity, measurement, measurementQuantity);
         _listProducts.Add(listProduct);
         product.AddListProduct(listProduct);
     }
 
-    public void RemoveProduct(GroceryListProduct listProduct)
+    public bool RemoveProduct(GroceryListProduct listProduct)
     {
-        //todo: validation
-        _listProducts.Remove(listProduct);
-    }
+        return _listProducts.Remove(listProduct);
+    } 
 
     public void ClearProducts()
     {
         _listProducts.Clear();
+    }
+
+    public bool ValidateProductNotDuplicate(string name)
+    {
+        return ListProducts.Any(lp => lp.Product.Name == name);
     }
 }

@@ -15,7 +15,6 @@
 
         private GroceryListProduct()
         {
-
         }
 
         public GroceryListProduct(GroceryList groceryList, Product product, int? quantity = null, string? measurement = null, int? measurementQuantity = null)
@@ -27,7 +26,7 @@
             MeasurementQuantity = measurementQuantity;
         }
 
-        public void ToggleIsCheckedOff() 
+        public void ToggleIsCheckedOff()
         {
             IsCheckedOff = !IsCheckedOff;
         }

@@ -1,13 +1,11 @@
 ﻿namespace Elwin.GoGroceries.Domain.Models
 {
-    public class Category : Entity
+    public class Category : NamedEntity
     {
-        public string Name { get; private set; }
         public string? ColorCode { get; private set; }
 
-        public Category(string name, string? colorCode)
+        public Category(string name, string? colorCode) : base(name)
         {
-            Name = name;
             ColorCode = colorCode;
         }
     }

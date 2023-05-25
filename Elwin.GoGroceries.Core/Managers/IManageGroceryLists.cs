@@ -11,6 +11,7 @@ public interface IManageGroceryLists
 {
     Task<GroceryListDto> GetGroceryListAsync(Guid id);
     Task<ICollection<GroceryListDto>> GetAllGroceryListsAsync();
+    Task<bool> DoesProductExistAsync(Guid listId, string name);
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
     Task DeleteGroceryListAsync(Guid listId);
@@ -33,7 +34,6 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryList = await _groceryRepository.FindAsync(id);
 
-        //todo proper validation
         if (groceryList is null) throw new ArgumentNullException(nameof(id));
 
         return GroceryListMapper.ToDto(groceryList);
@@ -45,9 +45,14 @@ public class ManageGroceryLists : IManageGroceryLists
         return groceryLists.Select(GroceryListMapper.ToDto).ToList();
     }
 
+    public async Task<bool> DoesProductExistAsync(Guid listId, string name)
+    {
+        var groceryList = await _groceryRepository.FindAsync(listId);
+        return groceryList.ValidateProductNotDuplicate(name);
+    }
+
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
     {
-        //todo: proper validation
         if (string.IsNullOrEmpty(dto?.Name))
         {
             throw new ArgumentNullException(nameof(dto.Name));
@@ -63,12 +68,10 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
 
-        //todo proper validation & extract it
         if (groceryList is null) throw new ArgumentNullException(nameof(listId));
         if (string.IsNullOrEmpty(dto.Name)) throw new ArgumentNullException(nameof(dto.Name));
 
         // Consider refactoring below to Chain of Responsibilities design pattern in the future
-
         Guid categoryId;
 
         if (dto.Category is null || dto.Category.Id == Guid.Empty)

@@ -4,7 +4,7 @@ namespace Elwin.GoGroceries.Contracts
 {
     public record CategoryDto : NamedDtoBase
     {
-        public string ColorCode { get; set; }
+        public string? ColorCode { get; set; }
 
         // NOTE: these overrides are required for mudblazor select to work properly.
         // When we switch to Smart Search, remove these.
