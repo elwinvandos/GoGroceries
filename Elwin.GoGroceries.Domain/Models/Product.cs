@@ -15,10 +15,4 @@ public class Product : NamedEntity
     {
         _listProducts.Add(listProduct);
     }
-
-    public void UpdateName(string name)
-    {
-        if (name == Name) return;
-        Name = name;
-    }
 }

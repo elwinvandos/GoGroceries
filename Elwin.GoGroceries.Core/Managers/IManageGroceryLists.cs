@@ -33,9 +33,6 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<GroceryListDto> GetGroceryListAsync(Guid id)
     {
         var groceryList = await _groceryRepository.FindAsync(id);
-
-        if (groceryList is null) throw new ArgumentNullException(nameof(id));
-
         return GroceryListMapper.ToDto(groceryList);
     }
 
@@ -53,11 +50,6 @@ public class ManageGroceryLists : IManageGroceryLists
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
     {
-        if (string.IsNullOrEmpty(dto?.Name))
-        {
-            throw new ArgumentNullException(nameof(dto.Name));
-        }
-
         dto.Name = dto.Name.Capitalize();
         var res = await _groceryRepository.AddAsync(new GroceryList(dto.Name));
 
@@ -68,7 +60,6 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
 
-        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
         if (string.IsNullOrEmpty(dto.Name)) throw new ArgumentNullException(nameof(dto.Name));
 
         // Consider refactoring below to Chain of Responsibilities design pattern in the future
@@ -104,7 +95,6 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId)
     {
         var groceryList = await _groceryRepository.FindAsync(groceryListId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(groceryListId));
         var res = await _groceryRepository.PutProductAssignmentAsync(groceryList, productId);
         return ProductMapper.ToDto(res);
     }
@@ -112,7 +102,6 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task DeleteGroceryListAsync(Guid listId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
 
         await _groceryRepository.DeleteAsync(groceryList);
     }
@@ -120,7 +109,6 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(productId));
 
         var listProduct = groceryList.ListProducts.Single(i => i.ProductId == productId);
         var res = await _groceryRepository.RemoveProductAsync(groceryList, listProduct);

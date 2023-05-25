@@ -8,5 +8,11 @@
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
+
+        public void UpdateName(string name)
+        {
+            if (name == Name) return;
+            Name = name;
+        }
     }
 }

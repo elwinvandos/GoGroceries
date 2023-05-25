@@ -1,0 +1,35 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+
+@page "/categories/{id:guid}"
+
+<MudPaper Width="100%" Class="pa-4">
+    <CategoryForm OnSave="Update" Category="category"></CategoryForm>
+</MudPaper>
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private CategoryDto? category { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"Categories/{Id}");
+        category = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<CategoryDto>());
+    }
+
+    protected async void Update(CategoryDto dto)
+    {
+        var res = await Http.PutAsync("Categories", JsonSerializerHelper.Process(dto));
+
+        if (res.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"/categories");
+        }
+    }
+}

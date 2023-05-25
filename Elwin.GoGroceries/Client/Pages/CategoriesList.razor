@@ -6,7 +6,7 @@
 @page "/categories";
 
 <MudPaper Width="100%">
-    <ListComponent Items="categories" OnDelete="Delete" OnAdd="Add"></ListComponent>
+    <ListComponent Items="categories" OnDelete="Delete" OnAdd="Add" OnClickListItem="EditCategory"></ListComponent>
     @if (categories?.Count() == 0)
     {
         <center>There are currently no categories.</center>
@@ -22,6 +22,16 @@
         categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
     }
 
+    protected async void Add()
+    {
+        Navigation.NavigateTo($"/categories/add");
+    }
+
+    protected async void EditCategory(Guid id)
+    {
+        Navigation.NavigateTo($"/categories/{id}");
+    }
+
     protected async Task Delete(Guid id)
     {
         var res = await Http.DeleteAsync($"Categories/{id}");
@@ -31,10 +41,5 @@
             categories?.Remove(categories.Single(l => l.Id == id));
             StateHasChanged();
         }
-    }
-
-    protected async void Add()
-    {
-        Navigation.NavigateTo($"/categories/add");
     }
 }

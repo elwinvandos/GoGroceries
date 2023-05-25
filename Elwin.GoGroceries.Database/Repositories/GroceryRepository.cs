@@ -41,7 +41,7 @@ public class GroceryRepository : IGroceryRepository
         return await _context.GroceryLists
             .Include(gl => gl.ListProducts)
                 .ThenInclude(lp => lp.Product)
-            .SingleOrDefaultAsync(gl => gl.Id == listId);
+            .SingleOrDefaultAsync(gl => gl.Id == listId) ?? throw new ArgumentNullException(nameof(listId));
     }
 
     public async Task<Product> FindItemByNameAsync(string name)
