@@ -11,15 +11,15 @@
     @if (groceryList?.Products?.Count() > 0)
     {
         <MudPaper Width="100%">
-            <MudExpansionPanels MultiExpansion="true">
+            <MudExpansionPanels MultiExpansion="true" Dense="true" DisableGutters="true">
                 @foreach (var category in categories)
                 {
                     @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
                     {
-                        <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")">
+                        <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")" Class="custom-panel-header">
                             <TitleContent>
                                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                                    <span>@category.Name</span>
+                                    <h6>@category.Name</h6>
                                     <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Tertiary" @onclick="() => AddNew(category.Id)" Size="Size.Small" Style="margin-right: 1rem;"></MudIconButton>
                                 </div>
                             </TitleContent>
@@ -36,7 +36,7 @@
                 }
                 @if (checkedOffProducts.Count() > 0)
                 {
-                    <MudExpansionPanel Text="Checked off products">
+                    <MudExpansionPanel Text="Checked off products" Class="custom-panel-header">
                         <ul style="text-decoration: line-through">
                             @foreach (var item in checkedOffProducts)
                             {
