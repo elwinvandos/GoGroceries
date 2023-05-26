@@ -4,7 +4,7 @@
 @using Elwin.GoGroceries.Contracts;
 
 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-    <MudTextField T="string" Label="Name" Required="true" RequiredError="Category requires a name!" @bind-Value="Category.Name" Immediate="true" Style="margin-bottom: 1rem;"/>
+    <MudTextField @ref="nameField" T="string" Label="Name" Required="true" RequiredError="Category requires a name!" @bind-Value="Category.Name" Immediate="true" Style="margin-bottom: 1rem;"/>
     <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="Category.ColorCode" Style="@($"color: {Category.ColorCode};")" 
     Placeholder="Select Color" ColorPickerView="ColorPickerView.Spectrum" />
     <div style="display: flex; align-items: center; margin-top: 0.5rem;">
@@ -24,4 +24,14 @@
     private string[] errors { get; set; } = { };
 
     private MudForm? form { get; set; } = new();
+    private MudTextField<string>? nameField { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(Category.Name))
+        {
+            await nameField.BlurAsync();
+            await nameField.Validate();
+        }
+    }
 }
