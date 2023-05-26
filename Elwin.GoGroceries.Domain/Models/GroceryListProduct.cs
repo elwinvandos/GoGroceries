@@ -30,5 +30,12 @@
         {
             IsCheckedOff = !IsCheckedOff;
         }
+
+        public void Update(int? quantity, string? measurement, int? measureMentQuantity)
+        {
+            Quantity = quantity;
+            Measurement = measurement;
+            MeasurementQuantity = measureMentQuantity;
+        }
     }
 }

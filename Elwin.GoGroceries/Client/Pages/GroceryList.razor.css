@@ -7,6 +7,16 @@ li:hover {
     cursor: pointer;
 }
 
-.custom-panel-header {
+::deep .custom-panel-header .mud-expand-panel-header {
     padding: 0px 12px;
+}
+
+
+::deep .edit-icon {
+    margin-left: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+::deep .edit-icon:hover {
+    color: #1ec8a5ff;
 }

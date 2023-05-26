@@ -14,9 +14,10 @@ public interface IManageGroceryLists
     Task<bool> DoesProductExistAsync(Guid listId, string name);
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
+    Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId);
+    Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto);
     Task DeleteGroceryListAsync(Guid listId);
     Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId);
-    Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId);
 }
 
 public class ManageGroceryLists : IManageGroceryLists
@@ -99,10 +100,41 @@ public class ManageGroceryLists : IManageGroceryLists
         return ProductMapper.ToDto(res);
     }
 
+    public async Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto)
+    {
+        var groceryList = await _groceryRepository.FindAsync(groceryListId);
+        var listProduct = groceryList.ListProducts.Single(lp => lp.Product.Id == productDto.Id);
+
+        if (listProduct.Product.Name != productDto.Name)
+        {
+            var product = await _groceryRepository.FindItemByNameAsync(productDto.Name);
+
+            if (product is null)
+            {
+                productDto.Name = productDto.Name.Capitalize();
+                var res = await _groceryRepository.AddProductAsync(groceryList, new Product(productDto.Name, productDto.Category.Id), productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
+            }
+            else
+            {
+                var res = await _groceryRepository.AddProductAsync(groceryList, product, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
+            }
+
+            await _groceryRepository.RemoveProductAsync(groceryList ,listProduct);
+
+        }
+        else
+        {
+            await _groceryRepository.UpdateAsync(groceryList, listProduct.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+        }
+
+        return ProductMapper.ToDto(listProduct);
+    }
+
     public async Task DeleteGroceryListAsync(Guid listId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-
         await _groceryRepository.DeleteAsync(groceryList);
     }
 
