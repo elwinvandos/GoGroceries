@@ -1,39 +1,14 @@
 ﻿@inject HttpClient Http
 @inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
 @using Elwin.GoGroceries.Contracts.Post;
 
 @page "/grocerylist/{id:guid}/add/{categoryId:guid?}"
 
-
 <MudPaper Width="100%" Class="pa-4">
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="dto.Name" Validation="@(new Func<string, Task<string>>(CheckNameDuplicate))" />
-        <MudNumericField @bind-Value="dto.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="100" />
-        <MudTextField T="string" Label="Measurement" HelperText="For example: '400g' or 'cartons'" @bind-Value="dto.Measurement"/>
-        @if (!string.IsNullOrEmpty(dto.Measurement))
-        {
-            <MudNumericField @bind-Value="dto.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
-        }
-        <MudSelect T="CategoryDto" Label="Category" @bind-Value="dto.Category" Style="margin-top: 1rem;">
-            @foreach(var category in categories)
-            {
-                <MudSelectItem Value="category"></MudSelectItem>
-            }
-        </MudSelect>
-        <MudTextField T="string" Label="Category name" Required="true" RequiredError="Product must have a category!"
-            HelperText="If you couldn't find your category, enter a new one here" @bind-Value="dto.Category.Name" Immediate="true" />
-        @if (!string.IsNullOrEmpty(dto.Category.Name))
-        {
-            <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="dto.Category.ColorCode" Style="@($"color: {dto.Category.ColorCode};")" 
-            Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum"/>
-        }
-        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton> 
-        </div>
-
-    </MudForm>
+    <ProductForm OnSave="Add" CategoryId="CategoryId" ListId="Id"></ProductForm>
 </MudPaper>
 
 @code {
@@ -43,25 +18,9 @@
     [Parameter]
     public Guid? CategoryId { get; set; }
 
-    private bool success { get; set; } = false;
-    private string[] errors { get; set; } = { };
-    private MudForm? form { get; set; } = new MudForm();
-
     private ICollection<CategoryDto>? categories { get; set; } = new List<CategoryDto>();
-    private PostProductDto dto = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        var res = await Http.GetAsync($"Categories");
-        categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
-
-        if (CategoryId is not null)
-        {
-            dto.Category = categories.Single(c => c.Id == CategoryId);
-        }
-    }
-
-    protected async void Add()
+    protected async void Add(PostProductDto dto)
     {
         var res = await Http.PostAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(dto));
 
@@ -69,17 +28,5 @@
         {
             Navigation.NavigateTo($"/grocerylist/{Id}");
         }
-    }
-
-    protected async Task<string> CheckNameDuplicate(string name)
-    {
-        if (!string.IsNullOrEmpty(name))
-        {
-            var res = await Http.GetAsync($"GroceryLists/checkProductExists/{Id}/{name}");
-            var exists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<bool>());
-
-            if (exists) return "Product name already exists.";
-        }
-        return null;
     }
 }

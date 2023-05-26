@@ -3,17 +3,21 @@
 @typeparam TItem where TItem : NamedDtoBase
 
 <li Style="display: flex; align-items: center; justify-content: space-around;">
-    <div style="@_nameWidth" @onclick="() => ClickListItem(Item.Id)">
+    <div style="@_nameWidth" @onclick="() => OnClickListItem.InvokeAsync(Item.Id)">
         @Item.Name
     </div>
     @if (ChildContent is not null)
     {
-        <div style="width: 52%;">
+        <div style="width: 50%;">
             @ChildContent
         </div>
     }
-    <div style="width: 10%; display: flex; justify-content: center;">
-        <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Style="font-size: 2rem;" Class="delete-icon" @onclick="() => Delete(Item.Id)" />
+    <div style="width: 10%; display: flex; justify-content: space-around;">
+        @if (ShowEdit)
+        {
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="edit-icon" @onclick="() => OnEdit.InvokeAsync(Item.Id)" />
+        }
+        <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="delete-icon" @onclick="() => OnDelete.InvokeAsync(Item.Id)" />
     </div>
 </li>
 
@@ -22,7 +26,13 @@
     public TItem Item { get; set; } = null!;
 
     [Parameter]
+    public bool ShowEdit { get; set; } = false;
+
+    [Parameter]
     public EventCallback<Guid> OnClickListItem { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnEdit { get; set; }
 
     [Parameter]
     public EventCallback<Guid> OnDelete { get; set; }
@@ -30,15 +40,5 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string _nameWidth => ChildContent is null ? "width: 88%" : "width: 38%";
-
-    protected async Task Delete(Guid id)
-    {
-        await OnDelete.InvokeAsync(id);
-    }
-
-    protected async Task ClickListItem(Guid id)
-    {
-        await OnClickListItem.InvokeAsync(id);
-    }
+    private string _nameWidth => ChildContent is null ? "width: 90%" : "width: 35%";
 }

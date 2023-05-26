@@ -8,5 +8,11 @@
         {
             ColorCode = colorCode;
         }
+
+        public void UpdateColorCode(string colorCode)
+        {
+            if (colorCode == ColorCode) return;
+            ColorCode = colorCode;
+        }
     }
 }

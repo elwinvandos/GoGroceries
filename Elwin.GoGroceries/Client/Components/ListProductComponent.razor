@@ -1,6 +1,7 @@
 ﻿@using Elwin.GoGroceries.Contracts;
+@inject NavigationManager Navigation
 
-<ListItemComponent Item="Product" OnDelete="Delete" OnClickListItem="ClickListItem">
+<ListItemComponent Item="Product" ShowEdit="true" OnEdit="() => OnEdit.InvokeAsync(Product.Id)" OnDelete="() => OnDelete.InvokeAsync(Product.Id)" OnClickListItem="() => OnClickListItem.InvokeAsync(Product.Id)">
     <div style="display: flex; justify-content: space-between">
         <div style="width: 25%">
             @if (Product.Quantity is not null)
@@ -29,18 +30,12 @@
     public ProductDto Product { get; set; }
 
     [Parameter]
+    public EventCallback<Guid> OnEdit { get; set; }
+
+    [Parameter]
     public EventCallback<Guid> OnDelete { get; set; }
 
     [Parameter]
     public EventCallback<Guid> OnClickListItem { get; set; }
-
-    protected async Task Delete(Guid itemId)
-    {
-        await OnDelete.InvokeAsync(itemId);
-    }
-
-    protected async Task ClickListItem(Guid id)
-    {
-        await OnClickListItem.InvokeAsync(id);
-    }
 }
+ 

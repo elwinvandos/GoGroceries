@@ -18,6 +18,12 @@ namespace Elwin.GoGroceries.API.Controllers
             _manageCategories = manageCategories;
         }
 
+        [HttpGet("{id}")]
+        public async Task<CategoryDto> GetAsync(Guid id)
+        {
+            return await _manageCategories.GetCategoryAsync(id);
+        }
+
         [HttpGet]
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
@@ -35,6 +41,12 @@ namespace Elwin.GoGroceries.API.Controllers
         public async Task<CategoryDto> AddAsync(CategoryDto dto)
         {
             return await _manageCategories.AddCategoryAsync(dto);
+        }
+
+        [HttpPut]
+        public async Task<CategoryDto> UpdateAsync(CategoryDto dto)
+        {
+            return await _manageCategories.UpdateCategoryAsync(dto);
         }
 
         [HttpDelete("{id}")]

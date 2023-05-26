@@ -14,9 +14,10 @@ public interface IManageGroceryLists
     Task<bool> DoesProductExistAsync(Guid listId, string name);
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
+    Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId);
+    Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto);
     Task DeleteGroceryListAsync(Guid listId);
     Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId);
-    Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId);
 }
 
 public class ManageGroceryLists : IManageGroceryLists
@@ -33,9 +34,6 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<GroceryListDto> GetGroceryListAsync(Guid id)
     {
         var groceryList = await _groceryRepository.FindAsync(id);
-
-        if (groceryList is null) throw new ArgumentNullException(nameof(id));
-
         return GroceryListMapper.ToDto(groceryList);
     }
 
@@ -53,11 +51,6 @@ public class ManageGroceryLists : IManageGroceryLists
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
     {
-        if (string.IsNullOrEmpty(dto?.Name))
-        {
-            throw new ArgumentNullException(nameof(dto.Name));
-        }
-
         dto.Name = dto.Name.Capitalize();
         var res = await _groceryRepository.AddAsync(new GroceryList(dto.Name));
 
@@ -68,7 +61,6 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
 
-        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
         if (string.IsNullOrEmpty(dto.Name)) throw new ArgumentNullException(nameof(dto.Name));
 
         // Consider refactoring below to Chain of Responsibilities design pattern in the future
@@ -104,23 +96,51 @@ public class ManageGroceryLists : IManageGroceryLists
     public async Task<ProductDto> PutProductAssignmentAsync(Guid groceryListId, Guid productId)
     {
         var groceryList = await _groceryRepository.FindAsync(groceryListId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(groceryListId));
         var res = await _groceryRepository.PutProductAssignmentAsync(groceryList, productId);
         return ProductMapper.ToDto(res);
+    }
+
+    public async Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto)
+    {
+        var groceryList = await _groceryRepository.FindAsync(groceryListId);
+        var listProduct = groceryList.ListProducts.Single(lp => lp.Product.Id == productDto.Id);
+
+        if (listProduct.Product.Name != productDto.Name)
+        {
+            var product = await _groceryRepository.FindItemByNameAsync(productDto.Name);
+
+            if (product is null)
+            {
+                productDto.Name = productDto.Name.Capitalize();
+                var res = await _groceryRepository.AddProductAsync(groceryList, new Product(productDto.Name, productDto.Category.Id), productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
+            }
+            else
+            {
+                var res = await _groceryRepository.AddProductAsync(groceryList, product, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
+            }
+
+            await _groceryRepository.RemoveProductAsync(groceryList ,listProduct);
+
+        }
+        else
+        {
+            await _groceryRepository.UpdateAsync(groceryList, listProduct.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+        }
+
+        return ProductMapper.ToDto(listProduct);
     }
 
     public async Task DeleteGroceryListAsync(Guid listId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(listId));
-
         await _groceryRepository.DeleteAsync(groceryList);
     }
 
     public async Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-        if (groceryList is null) throw new ArgumentNullException(nameof(productId));
 
         var listProduct = groceryList.ListProducts.Single(i => i.ProductId == productId);
         var res = await _groceryRepository.RemoveProductAsync(groceryList, listProduct);

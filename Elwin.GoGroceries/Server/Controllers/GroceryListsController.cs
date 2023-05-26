@@ -54,6 +54,12 @@ public class GroceryListsController : Controller
         return await _manageGroceryLists.PutProductAssignmentAsync(listId, product.Id);
     }
 
+    [HttpPut("product/{listId}")]
+    public async Task<ActionResult<ProductDto>> PutProductUpdateAsync(Guid listId, PostProductDto dto)
+    {
+        return await _manageGroceryLists.PutProductUpdate(listId, dto);
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {

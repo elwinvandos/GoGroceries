@@ -1,0 +1,41 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Contracts.Post;
+
+@page "/{listId:guid}/listProducts/{id:guid}"
+
+<MudPaper Width="100%" Class="pa-4">
+    <ProductForm OnSave="Update" ListId="ListId" Product="product"></ProductForm>
+</MudPaper>
+
+@code {
+
+    [Parameter]
+    public Guid ListId { get; set; }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private ProductDto? product { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //todo: when we have implemented state management, fetch list from state
+        var res = await Http.GetAsync($"/GroceryLists/{ListId}");
+        var groceryList = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<GroceryListDto>());
+        product = groceryList.Products.Single(p => p.Id == Id);
+    }
+
+    protected async void Update(PostProductDto dto)
+    {
+        var res = await Http.PutAsync($"GroceryLists/product/{ListId}", JsonSerializerHelper.Process(dto));
+
+        if (res.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"/grocerylist/{ListId}");
+        }
+    }
+}

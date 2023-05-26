@@ -1,0 +1,37 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+
+<MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+    <MudTextField @ref="nameField" T="string" Label="Name" Required="true" RequiredError="Category requires a name!" @bind-Value="Category.Name" Immediate="true" Style="margin-bottom: 1rem;"/>
+    <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="Category.ColorCode" Style="@($"color: {Category.ColorCode};")" 
+    Placeholder="Select Color" ColorPickerView="ColorPickerView.Spectrum" />
+    <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => OnSave.InvokeAsync(Category)">Save</MudButton>
+    </div>
+
+</MudForm>
+
+@code {
+    [Parameter]
+    public EventCallback<CategoryDto> OnSave { get; set; }
+
+    [Parameter]
+    public CategoryDto Category { get; set; } = new();
+
+    private bool success { get; set; } = false;
+    private string[] errors { get; set; } = { };
+
+    private MudForm? form { get; set; } = new();
+    private MudTextField<string>? nameField { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(Category.Name))
+        {
+            await nameField.BlurAsync();
+            await nameField.Validate();
+        }
+    }
+}

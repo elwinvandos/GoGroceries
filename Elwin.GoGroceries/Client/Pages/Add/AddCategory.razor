@@ -1,32 +1,18 @@
 ﻿@inject HttpClient Http
 @inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
 
 @page "/categories/add"
 
 <MudPaper Width="100%" Class="pa-4">
-
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Category requires a name!" @bind-Value="dto.Name" Immediate="true" Style="margin-bottom: 1rem;"/>
-        <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="dto.ColorCode" Style="@($"color: {dto.ColorCode};")" 
-        Placeholder="Select Color" ColorPickerView="ColorPickerView.Spectrum" />
-        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Add()">Add</MudButton>
-        </div>
-
-    </MudForm>
+    <CategoryForm OnSave="Add"></CategoryForm>
 </MudPaper>
 
 @code {
-    private bool success { get; set; } = false;
-    private string[] errors { get; set; } = { };
 
-    private MudForm? form { get; set; } = new();
-
-    private CategoryDto dto = new();
-
-    protected async void Add()
+    protected async void Add(CategoryDto dto)
     {
         var res = await Http.PostAsync("Categories", JsonSerializerHelper.Process(dto));
 

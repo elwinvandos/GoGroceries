@@ -9,6 +9,7 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
         Task<ICollection<Category>> GetAll();
         Task<Category> FindAsync(Guid categoryId);
         Task<Category> AddAsync(Category category);
+        Task<Category> UpdateAsync(Category category);
         Task DeleteAsync(Category category);
     }
 
@@ -35,6 +36,13 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
         public async Task<Category> AddAsync(Category category)
         {
             var res = await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
+
+        public async Task<Category> UpdateAsync(Category category)
+        {
+            var res = _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             return res.Entity;
         }
