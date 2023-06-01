@@ -3,6 +3,7 @@
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
 @using Elwin.GoGroceries.Contracts.Post;
+@using System.Net;
 
 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
     <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="PostProduct.Name" Validation="@(new Func<string, Task<string>>(CheckNameDuplicate))" />
@@ -78,7 +79,7 @@
     {
         if (!string.IsNullOrEmpty(name) && Product?.Name != name)
         {
-            var res = await Http.GetAsync($"GroceryLists/checkProductExists/{ListId}/{name}");
+            var res = await Http.GetAsync($"GroceryLists/checkProductExists/{ListId}/" + Uri.EscapeDataString(name));
             var exists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<bool>());
 
             if (exists) return "Product name already exists.";
