@@ -42,16 +42,16 @@ public class GroceryListsController : Controller
         return await _manageGroceryLists.AddGroceryListAsync(dto);
     }
 
+    [HttpPut]
+    public async Task<ActionResult<GroceryListDto>> PutGroceryListUpdateAsync(GroceryListDto dto)
+    {
+        return await _manageGroceryLists.UpdateGroceryListProducts(dto);
+    }
+
     [HttpPost("{id}")]
     public async Task<ActionResult<GroceryListDto>> PostProductAsync(Guid id, PostProductDto dto)
     {
         return await _manageGroceryLists.AddProductToListAsync(id, dto);
-    }
-
-    [HttpPut("{listId}")]
-    public async Task<ActionResult<ProductDto>> PutProductAssignment(Guid listId, ProductDto product)
-    {
-        return await _manageGroceryLists.PutProductAssignmentAsync(listId, product.Id);
     }
 
     [HttpPut("product/{listId}")]

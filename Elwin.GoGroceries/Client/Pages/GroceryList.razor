@@ -3,6 +3,7 @@
 @using Elwin.GoGroceries.Client.Components;
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@implements IDisposable
 @page "/grocerylist/{id:guid}"
 
 
@@ -11,6 +12,7 @@
     @if (groceryList?.Products?.Count() > 0)
     {
         <MudPaper Width="100%">
+
             <MudExpansionPanels MultiExpansion="true" Dense="true" DisableGutters="true">
                 @foreach (var category in categories)
                 {
@@ -71,6 +73,8 @@
 
     private IEnumerable<ProductDto> checkedOffProducts => groceryList.Products.Where(i => i.IsCheckedOff);
 
+    private PeriodicTimer timer;
+
     protected override async Task OnInitializedAsync()
     {
         var categoriesRes = await Http.GetAsync($"Categories");
@@ -78,6 +82,20 @@
 
         var groceryListRes = await Http.GetAsync($"GroceryLists/{Id}");
         groceryList = await HttpResultHelper.Process(groceryListRes, () => groceryListRes.Content.ReadFromJsonAsync<GroceryListDto>());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Only execute following code on first render or we block our component rendering cycle
+        if (firstRender)
+        {
+            timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+
+            while (await timer.WaitForNextTickAsync())
+            {
+                await SaveGroceryList();
+            }
+        }
     }
 
     protected void AddNew()
@@ -111,19 +129,26 @@
         }
     }
 
-    protected async Task ClickListItem(Guid productId)
+    protected void ClickListItem(Guid productId)
     {
         var product = groceryList?.Products?.Single(i => i.Id == productId);
-        var res = await Http.PutAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(product));
+        product.IsCheckedOff = !product.IsCheckedOff;
+        StateHasChanged();
+    }
 
-        if (res.IsSuccessStatusCode)
+    public async void Dispose()
+    {
+        timer.Dispose();
+        await SaveGroceryList();
+    }
+
+    public async Task SaveGroceryList()
+    {
+        var res = await Http.PutAsync($"GroceryLists", JsonSerializerHelper.Process(groceryList));
+
+        if (!res.IsSuccessStatusCode)
         {
-            // Something to think about: is it more correct to find and update the original item, or update the item entirely?
-            // To update the item entirely without losing index, we must switch from using an ICollection to a List
-            var resProduct = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ProductDto>());
-            var originalProduct = groceryList?.Products?.Single(i => i.Id == resProduct?.Id);
-            originalProduct.IsCheckedOff = resProduct.IsCheckedOff;
-            StateHasChanged();
+            // handle error in MainLayout
         }
     }
 }
