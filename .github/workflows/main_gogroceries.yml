@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - gogroceries
+name: Build and deploy GoGroceries
 
 on:
   push:
@@ -21,6 +21,9 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
+
+      - name: Update cache version to ensure clients update
+        run: 'sed -i ''s/{#CACHE_VERSION#}/${{github.run_id}}/'' Elwin.GoGroceries/Client/wwwroot/service-worker.published.js'
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
