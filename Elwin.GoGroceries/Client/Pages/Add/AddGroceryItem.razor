@@ -8,7 +8,9 @@
 @page "/grocerylist/{id:guid}/add/{categoryId:guid?}"
 
 <MudPaper Width="100%" Class="pa-4">
-    <ProductForm OnSave="Add" CategoryId="CategoryId" ListId="Id"></ProductForm>
+    <ProductForm OnSave="Add" CategoryId="CategoryId" ListId="Id">
+        <MudCheckBox @bind-Checked="addAnother" Color="Color.Tertiary" Label="Add another product"></MudCheckBox>
+    </ProductForm>
 </MudPaper>
 
 @code {
@@ -20,13 +22,15 @@
 
     private ICollection<CategoryDto>? categories { get; set; } = new List<CategoryDto>();
 
+    private bool addAnother { get; set; }
+
     protected async void Add(PostProductDto dto)
     {
         var res = await Http.PostAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(dto));
 
         if (res.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo($"/grocerylist/{Id}");
+            if (!addAnother) Navigation.NavigateTo($"/grocerylist/{Id}");
         }
     }
 }
