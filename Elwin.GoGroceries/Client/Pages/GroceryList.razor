@@ -8,7 +8,7 @@
 
 <style>
     /* MudBlazor overrides don't work in global or scoped css. I haven't managed to figure out why. This is a temporary workaround */
-    h5 {
+    h6 {
         margin-bottom: 0rem !important;
     }
 
@@ -31,10 +31,10 @@
                         <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")" Class="custom-panel-header">
                             <TitleContent>
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0rem !important;">
-                                    <h5>
-                                        @category.Name
-                                        <MudIcon Icon="@Icons.Material.Filled.Edit" Class="edit-icon" @onclick="() => EditCategory(category.Id)" />
-                                    </h5>
+                                    <h6 style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div>@category.Name</div>
+                                        <MudIcon Icon="@Icons.Material.Filled.Edit" Class="edit-icon" Size="Size.Small" @onclick="() => EditCategory(category.Id)" />
+                                    </h6>
                                     <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Tertiary" @onclick="() => AddNew(category.Id)" Size="Size.Small" Style="margin-right: 1rem;"></MudIconButton>
                                 </div>
                             </TitleContent>
