@@ -27,7 +27,8 @@
                     Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum" />
     }
     <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => OnSave.InvokeAsync(PostProduct)">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Save(PostProduct)">Save</MudButton>
+        @ChildContent
     </div>
 </MudForm>
 
@@ -43,6 +44,9 @@
 
     [Parameter]
     public EventCallback<PostProductDto> OnSave { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     private bool success { get; set; } = false;
     private string[] errors { get; set; } = { };
@@ -73,6 +77,12 @@
         {
             PostProduct.Category = categories.Single(c => c.Id == CategoryId);
         }
+    }
+
+    protected async Task Save(PostProductDto product)
+    {    
+        await OnSave.InvokeAsync(PostProduct);
+        PostProduct = new();
     }
 
     protected async Task<string> CheckNameDuplicate(string name)

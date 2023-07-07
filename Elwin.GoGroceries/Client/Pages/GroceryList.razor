@@ -6,6 +6,16 @@
 @implements IDisposable
 @page "/grocerylist/{id:guid}"
 
+<style>
+    /* MudBlazor overrides don't work in global or scoped css. I haven't managed to figure out why. This is a temporary workaround */
+    h5 {
+        margin-bottom: 0rem !important;
+    }
+
+    .mud-expand-panel-header {
+        padding: 6px 12px !important;
+    }
+</style>
 
 @if (categories is not null & groceryList?.Products is not null)
 {
@@ -20,7 +30,7 @@
                     {
                         <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")" Class="custom-panel-header">
                             <TitleContent>
-                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0rem !important;">
                                     <h5>
                                         @category.Name
                                         <MudIcon Icon="@Icons.Material.Filled.Edit" Class="edit-icon" @onclick="() => EditCategory(category.Id)" />

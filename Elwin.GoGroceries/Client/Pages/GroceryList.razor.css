@@ -7,10 +7,9 @@ li:hover {
     cursor: pointer;
 }
 
-::deep .custom-panel-header .mud-expand-panel-header {
-    padding: 0px 12px;
+.mud-expand-panel-header {
+    padding: 4px 12px !important;
 }
-
 
 ::deep .edit-icon {
     margin-left: 0.5rem;
