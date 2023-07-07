@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 @*Add the following components to your MainLayout.razor note that the ThemeProvider is essential for MudBlazor but the rest is optional.*@
 <MudThemeProvider />
@@ -8,7 +9,8 @@
 
 <MudLayout>
     <MudAppBar Color="Color.Tertiary">
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIosNew" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIosNew" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoHome())" />
         GoGroceries
         <MudSpacer/>
 @*        <small>Run id: @CacheVersion</small>*@
@@ -34,8 +36,13 @@
         CacheVersion = cacheVersion;
     }
 
-    private void GoBack()
+    private void GoHome()
     {
         Navigation.NavigateTo("..");
+    }
+
+    private async Task GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }
