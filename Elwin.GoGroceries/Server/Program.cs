@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using Elwin.GoGroceries.API.Configurations;
+using Elwin.GoGroceries.API.Services;
 using Elwin.GoGroceries.Core.Extensions;
 using Elwin.GoGroceries.Infrastructure.Extensions;
 
@@ -7,13 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddConfigurations();
 
 // Add services to the container.
-
+builder.Services.AddScoped<IGetAppVersionService, GetAppVersionService>();
 builder.Services.AddInfrastructureExtensions();
 builder.Services.AddCoreExtensions();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSwaggerGen();
 
 builder.AddConfigurationServices();

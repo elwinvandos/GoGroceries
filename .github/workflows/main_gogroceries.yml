@@ -22,9 +22,6 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
-      - name: Update cache version to ensure clients update
-        run: 'sed -i ''s/{#CACHE_VERSION#}/${{github.run_id}}/'' Elwin.GoGroceries/Client/wwwroot/service-worker.published.js'
-
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
