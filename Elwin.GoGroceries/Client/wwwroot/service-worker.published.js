@@ -11,9 +11,6 @@ const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
 const offlineAssetsExclude = [/^service-worker\.js$/];
 
-/*Attempt #1 at solving client cache remaining stale. We update this in our deployment GH action*/
-const CACHE_VERSION = '{#CACHE_VERSION#}'
-
 async function onInstall(event) {
     console.info('Service worker: Install');
 
@@ -27,9 +24,6 @@ async function onInstall(event) {
 
 async function onActivate(event) {
     console.info('Service worker: Activate');
-
-    // Display last run number in our app
-    DotNet.invokeMethodAsync('Elwin.GoGroceries.Client', 'GetCacheVersion', CACHE_VERSION);
 
     // Delete unused caches
     const cacheKeys = await caches.keys();

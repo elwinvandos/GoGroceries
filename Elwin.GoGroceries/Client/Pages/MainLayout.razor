@@ -1,6 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Elwin.GoGroceries.Client.Helpers;
+@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject ILocalStorageService localStorage
+@inject HttpClient Http
 
 @*Add the following components to your MainLayout.razor note that the ThemeProvider is essential for MudBlazor but the rest is optional.*@
 <MudThemeProvider />
@@ -12,28 +15,57 @@
         <MudIconButton Icon="@Icons.Material.Filled.ArrowBackIosNew" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
         <MudIconButton Icon="@Icons.Material.Filled.Home" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoHome())" />
         GoGroceries
-        <MudSpacer/>
-@*        <small>Run id: @CacheVersion</small>*@
+        <MudSpacer />
+        <small>App version: @AppVersion</small>
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit">
             <MudMenuItem Href="/categories">Manage categories</MudMenuItem>
             <MudMenuItem Href="/emptycategories">Empty categories</MudMenuItem>
         </MudMenu>
     </MudAppBar>
-    <MudMainContent >
+    <MudMainContent>
+        @if (updateNeeded)
+        {
+            <MudCard>
+                <MudCardContent>
+                    <MudText>Old version detected</MudText>
+                    <MudText Typo="Typo.body2">Please click the button below to fetch latest version from server.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Tertiary" OnClick="HardRefresh">Update!</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }
         <MudContainer Style="margin-top: 0.5rem; padding-left: 0.3rem; padding-right: 0.3rem;" MaxWidth="MaxWidth.Small">
             @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
- 
-@code {
-    public string CacheVersion { get; set; }
 
-    // We call this from our service worker
-    [JSInvokable]
-    public void GetCacheVersion(string cacheVersion)
+@code {
+    public string AppVersion { get; set; }
+
+    private bool updateNeeded { get; set; } = false;
+    private static readonly string appVersion = null!;
+
+    protected override async Task OnInitializedAsync()
     {
-        CacheVersion = cacheVersion;
+        var version = await localStorage.GetItemAsync<string>(nameof(appVersion));
+
+        var versionRes = await Http.GetAsync($"App/version");
+        var processedVersion = await HttpResultHelper.Process(versionRes, () => versionRes.Content.ReadAsStringAsync());
+
+        if (string.IsNullOrEmpty(version))
+        {
+            await localStorage.SetItemAsync<string>(nameof(appVersion), processedVersion);
+        }
+
+        if (version != processedVersion)
+        {
+            await localStorage.SetItemAsync<string>(nameof(appVersion), processedVersion);
+            updateNeeded = true;
+        }
+
+        AppVersion = version;
     }
 
     private void GoHome()
@@ -44,5 +76,10 @@
     private async Task GoBack()
     {
         await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task HardRefresh()
+    {
+        await JSRuntime.InvokeVoidAsync("hardRefresh");
     }
 }
