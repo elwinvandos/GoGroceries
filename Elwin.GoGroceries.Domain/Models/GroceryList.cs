@@ -10,9 +10,9 @@ public class GroceryList : NamedEntity
 
     }
 
-    public void AddProduct(Product product, int? quantity, string? measurement, int? measurementQuantity)
+    public void AddProduct(Product product, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity)
     {
-        var listProduct = new GroceryListProduct(this, product, quantity, measurement, measurementQuantity);
+        var listProduct = new GroceryListProduct(this, product, categoryId, quantity, measurement, measurementQuantity);
         _listProducts.Add(listProduct);
         product.AddListProduct(listProduct);
     }
@@ -27,8 +27,8 @@ public class GroceryList : NamedEntity
         _listProducts.Clear();
     }
 
-    public bool ValidateProductNotDuplicate(string name)
+    public bool ValidateProductNotDuplicate(string name, Guid categoryId)
     {
-        return ListProducts.Any(lp => lp.Product.Name == name);
+        return _listProducts.Any(lp => lp.Product.Name == name && lp.CategoryId == categoryId);
     }
 }

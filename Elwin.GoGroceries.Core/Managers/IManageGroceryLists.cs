@@ -11,7 +11,7 @@ public interface IManageGroceryLists
 {
     Task<GroceryListDto> GetGroceryListAsync(Guid id);
     Task<ICollection<GroceryListDto>> GetAllGroceryListsAsync();
-    Task<bool> DoesProductExistAsync(Guid listId, string name);
+    Task<bool> DoesListProductExistAsync(Guid listId, string name, Guid categoryId);
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
     Task<GroceryListDto> UpdateGroceryListProducts(GroceryListDto groceryListDto);
@@ -43,10 +43,10 @@ public class ManageGroceryLists : IManageGroceryLists
         return groceryLists.Select(GroceryListMapper.ToDto).ToList();
     }
 
-    public async Task<bool> DoesProductExistAsync(Guid listId, string name)
+    public async Task<bool> DoesListProductExistAsync(Guid listId, string name, Guid categoryId)
     {
         var groceryList = await _groceryRepository.FindAsync(listId);
-        return groceryList.ValidateProductNotDuplicate(name);
+        return groceryList.ValidateProductNotDuplicate(name, categoryId);
     }
 
     public async Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto)
@@ -83,11 +83,11 @@ public class ManageGroceryLists : IManageGroceryLists
         {
             dto.Name = dto.Name.Capitalize();
 
-            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name, categoryId), dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
+            await _groceryRepository.AddProductAsync(groceryList, new Product(dto.Name), dto.Category.Id, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
         }
         else
         {
-            await _groceryRepository.AddProductAsync(groceryList, product, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
+            await _groceryRepository.AddProductAsync(groceryList, product, dto.Category.Id, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
         }
 
         return GroceryListMapper.ToDto(groceryList);
@@ -118,12 +118,12 @@ public class ManageGroceryLists : IManageGroceryLists
             if (product is null)
             {
                 productDto.Name = productDto.Name.Capitalize();
-                var res = await _groceryRepository.AddProductAsync(groceryList, new Product(productDto.Name, productDto.Category.Id), productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                var res = await _groceryRepository.AddProductAsync(groceryList, new Product(productDto.Name), productDto.Category.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
                 listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
             }
             else
             {
-                var res = await _groceryRepository.AddProductAsync(groceryList, product, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+                var res = await _groceryRepository.AddProductAsync(groceryList, product, productDto.Category.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
                 listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
             }
 
@@ -132,7 +132,7 @@ public class ManageGroceryLists : IManageGroceryLists
         }
         else
         {
-            await _groceryRepository.UpdateProductAsync(groceryList, listProduct.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
+            await _groceryRepository.UpdateProductAsync(groceryList, listProduct.Id, productDto.Category.Id, productDto.Quantity, productDto.Measurement, productDto.MeasurementQuantity);
         }
 
         return ProductMapper.ToDto(listProduct);

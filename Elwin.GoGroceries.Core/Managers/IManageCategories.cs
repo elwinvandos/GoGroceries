@@ -42,7 +42,7 @@ namespace Elwin.GoGroceries.Core.Managers
 
             foreach (var category in categories)
             {
-                if (!groceryItems.Select(i => i.CategoryId).Contains(category.Id))
+                if (!groceryItems.SelectMany(i => i.ListProducts).Select(lp => lp.CategoryId).Contains(category.Id))
                 {
                     emptyCategories.Add(CategoryMapper.ToDto(category));
                 }
