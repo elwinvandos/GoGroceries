@@ -4,11 +4,10 @@ public class Product : NamedEntity
 {
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct>? ListProducts { get; private set; }
-    public Guid CategoryId { get; private set; }
 
-    public Product(string name, Guid categoryId) : base(name)
+    public Product(string name) : base(name)
     {
-        CategoryId = categoryId;
+
     }
 
     public void AddListProduct(GroceryListProduct listProduct)

@@ -30,10 +30,10 @@ public class GroceryListsController : Controller
         return await _manageGroceryLists.GetAllGroceryListsAsync();
     }
 
-    [HttpGet("checkProductExists/{id}/{name}")]
-    public async Task<bool> GetDoesProductExistAsync(Guid id, string name)
+    [HttpGet("checkProductExists/{id}/{name}/{categoryId}")]
+    public async Task<bool> GetDoesProductExistAsync(Guid id, string name, Guid categoryId)
     {
-        return await _manageGroceryLists.DoesProductExistAsync(id, name);
+        return await _manageGroceryLists.DoesListProductExistAsync(id, name, categoryId);
     }
 
     [HttpPost]

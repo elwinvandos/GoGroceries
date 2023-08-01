@@ -11,11 +11,11 @@ public interface IGroceryRepository
     Task<ICollection<GroceryList>> GetAll();
     Task<ICollection<Product>> GetAllProducts();
     Task<GroceryList> AddAsync(GroceryList groceryList);
-    Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem, int? quantity, string? measurement, int? measurementQuantity);
+    Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity);
     Task DeleteAsync(GroceryList groceryList);
     Task<GroceryList> RemoveProductAsync(GroceryList groceryList, GroceryListProduct listProduct);
     Task<GroceryListProduct> UpdateProductAsync(GroceryList groceryList, Guid productId, bool isCheckedOff);
-    Task<GroceryListProduct> UpdateProductAsync(GroceryList groceryList, Guid productId, int? quantity, string? measurement, int? measurementQuantity);
+    Task<GroceryListProduct> UpdateProductAsync(GroceryList groceryList, Guid productId, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity);
 }
 
 public class GroceryRepository : IGroceryRepository
@@ -58,9 +58,9 @@ public class GroceryRepository : IGroceryRepository
         return res.Entity;
     }
 
-    public async Task<GroceryList> AddProductAsync(GroceryList groceryList, Product product, int? quantity, string? measurement, int? measurementQuantity)
+    public async Task<GroceryList> AddProductAsync(GroceryList groceryList, Product product, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity)
     {
-        groceryList.AddProduct(product, quantity, measurement, measurementQuantity);
+        groceryList.AddProduct(product, categoryId, quantity, measurement, measurementQuantity);
         await _context.SaveChangesAsync();
         return groceryList;
     }
@@ -73,10 +73,10 @@ public class GroceryRepository : IGroceryRepository
         return listProduct;
     }
 
-    public async Task<GroceryListProduct> UpdateProductAsync(GroceryList groceryList, Guid productId, int? quantity, string? measurement, int? measurementQuantity)
+    public async Task<GroceryListProduct> UpdateProductAsync(GroceryList groceryList, Guid productId, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity)
     {
         var listProduct = groceryList.ListProducts.Single(lp => lp.Id == productId);
-        listProduct.Update(quantity, measurement, measurementQuantity);
+        listProduct.Update(categoryId, quantity, measurement, measurementQuantity);
         await _context.SaveChangesAsync();
         return listProduct;
     }
