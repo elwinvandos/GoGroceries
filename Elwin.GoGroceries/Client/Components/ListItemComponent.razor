@@ -2,13 +2,13 @@
 @using Elwin.GoGroceries.Contracts.DtoBases;
 @typeparam TItem where TItem : NamedDtoBase
 
-<li Style="display: flex; align-items: center; justify-content: space-around;" @onclick="() => OnClickListItem.InvokeAsync(Item.Id)">
-    <div style="@_nameWidth">
+<li Style="display: flex; align-items: center; justify-content: space-around;">
+    <div style="@_nameWidth" @onclick="() => OnClickListItem.InvokeAsync(Item.Id)">
         @Item.Name
     </div>
     @if (ChildContent is not null)
     {
-        <div style="width: 50%;">
+        <div style="width: 50%;" @onclick="() => OnClickListItem.InvokeAsync(Item.Id)">
             @ChildContent
         </div>
     }
@@ -40,5 +40,5 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string _nameWidth => ChildContent is null ? "width: 90%" : "width: 35%";
+    private string _nameWidth => ChildContent is null ? "width: 90%; padding: 0.6rem;" : "width: 35%; padding: 0.6rem;";
 }
