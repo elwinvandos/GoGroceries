@@ -21,6 +21,8 @@ builder.Services.AddSwaggerGen();
 
 builder.AddConfigurationServices();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,9 +46,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.MapHealthChecks("/health");
 
 app.Run();
