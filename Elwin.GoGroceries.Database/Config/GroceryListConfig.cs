@@ -1,4 +1,4 @@
-﻿using Elwin.GoGroceries.Domain.Models;
+﻿using Elwin.GoGroceries.Domain.Models.GroceryLists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,4 +14,3 @@ public class GroceryListConfig : IEntityTypeConfiguration<GroceryList>
                         .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
- 

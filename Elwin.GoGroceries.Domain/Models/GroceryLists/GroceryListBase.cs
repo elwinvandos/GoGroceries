@@ -1,11 +1,11 @@
-﻿namespace Elwin.GoGroceries.Domain.Models;
+﻿namespace Elwin.GoGroceries.Domain.Models.GroceryLists;
 
-public class GroceryList : NamedEntity
+public class GroceryListBase : NamedEntity
 {
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct> ListProducts => _listProducts;
 
-    public GroceryList(string name) : base(name)
+    public GroceryListBase(string name) : base(name)
     {
 
     }
@@ -17,10 +17,16 @@ public class GroceryList : NamedEntity
         product.AddListProduct(listProduct);
     }
 
+    public void AddProduct(GroceryListProduct listProduct)
+    {
+        _listProducts.Add(listProduct);
+        listProduct.Product.AddListProduct(listProduct);
+    }
+
     public bool RemoveProduct(GroceryListProduct listProduct)
     {
         return _listProducts.Remove(listProduct);
-    } 
+    }
 
     public void ClearProducts()
     {

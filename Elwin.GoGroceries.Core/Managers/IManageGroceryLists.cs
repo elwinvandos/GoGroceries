@@ -2,6 +2,7 @@
 using Elwin.GoGroceries.Contracts.Post;
 using Elwin.GoGroceries.Core.Extensions;
 using Elwin.GoGroceries.Domain.Models;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 using Elwin.GoGroceries.Infrastructure.Mappers;
 using Elwin.GoGroceries.Infrastructure.Repositories;
 

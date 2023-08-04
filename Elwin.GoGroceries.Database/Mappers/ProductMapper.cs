@@ -1,5 +1,5 @@
 ﻿using Elwin.GoGroceries.Contracts;
-using Elwin.GoGroceries.Domain.Models;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 
 namespace Elwin.GoGroceries.Infrastructure.Mappers
 {

@@ -1,6 +1,7 @@
 ﻿using Elwin.GoGroceries.Infrastructure.DbContexts;
 using Elwin.GoGroceries.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 
 namespace Elwin.GoGroceries.Infrastructure.Repositories;
 
