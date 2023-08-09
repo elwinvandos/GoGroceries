@@ -20,11 +20,13 @@ namespace Elwin.GoGroceries.Core.Managers
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IGroceryRepository _groceryRepositroy;
+        private readonly IProductRepository _productRepository;
 
-        public ManageCategories(ICategoryRepository categoryRepository, IGroceryRepository groceryRepositroy)
+        public ManageCategories(ICategoryRepository categoryRepository, IGroceryRepository groceryRepositroy, IProductRepository productRepository)
         {
             _categoryRepository = categoryRepository;
             _groceryRepositroy = groceryRepositroy;
+            _productRepository = productRepository;
         }
 
         public async Task<ICollection<CategoryDto>> GetAllCategoriesAsync()
@@ -36,7 +38,7 @@ namespace Elwin.GoGroceries.Core.Managers
         public async Task<ICollection<CategoryDto>> GetEmptyCategoriesAsync()
         {
             var categories = await _categoryRepository.GetAll();
-            var groceryItems = await _groceryRepositroy.GetAllProducts();
+            var groceryItems = await _productRepository.GetAllProducts();
 
             var emptyCategories = new List<CategoryDto>();
 

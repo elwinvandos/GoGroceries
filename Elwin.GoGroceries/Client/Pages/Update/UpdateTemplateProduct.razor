@@ -6,37 +6,37 @@
 @using Elwin.GoGroceries.Contracts.Post;
 @using Elwin.GoGroceries.Contracts.Product;
 
-@page "/{listId:guid}/listProducts/{id:guid}"
+@page "/{templateId:guid}/templateProducts/{id:guid}"
 
 <MudPaper Width="100%" Class="pa-4">
-    <ProductForm OnSave="Update" ListId="ListId" Product="product"></ProductForm>
+    <ProductForm OnSave="Update" ListId="TemplateId" Product="product"></ProductForm>
 </MudPaper>
 
 @code {
 
     [Parameter]
-    public Guid ListId { get; set; }
+    public Guid TemplateId { get; set; }
 
     [Parameter]
     public Guid Id { get; set; }
 
-    private ListProductDto? product { get; set; } = new();
+    private TemplateProductDto? product { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         //todo: when we have implemented state management, fetch list from state
-        var res = await Http.GetAsync($"/GroceryLists/{ListId}");
-        var groceryList = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<GroceryListDto>());
-        product = groceryList.Products.Single(p => p.Id == Id);
+        var res = await Http.GetAsync($"/Templates/{TemplateId}");
+        var template = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<TemplateDto>());
+        product = template.Products.Single(p => p.Id == Id);
     }
 
     protected async void Update(PostProductDto dto)
     {
-        var res = await Http.PutAsync($"GroceryLists/product/{ListId}", JsonSerializerHelper.Process(dto));
+        var res = await Http.PutAsync($"Templates/product/{TemplateId}", JsonSerializerHelper.Process(dto));
 
         if (res.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo($"/grocerylist/{ListId}");
+            Navigation.NavigateTo($"/template/{TemplateId}");
         }
     }
 }

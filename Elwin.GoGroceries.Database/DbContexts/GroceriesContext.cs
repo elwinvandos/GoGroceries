@@ -1,4 +1,6 @@
 ﻿using Elwin.GoGroceries.Domain.Models;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
+using Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
 using Elwin.GoGroceries.Infrastructure.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,6 +19,7 @@ public class GroceriesContext : DbContext
     public DbSet<GroceryList> GroceryLists { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<GroceryListTemplate> GroceryListTemplates { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlServer(_settings.ConnectionString)
@@ -26,5 +29,7 @@ public class GroceriesContext : DbContext
     {
         modelBuilder.ApplyConfiguration(new GroceryListConfig());
         modelBuilder.ApplyConfiguration(new GroceryListProductConfig());
+        modelBuilder.ApplyConfiguration(new GroceryListTemplateConfig());
+        modelBuilder.ApplyConfiguration(new GroceryListTemplateProductConfig());
     }
 }

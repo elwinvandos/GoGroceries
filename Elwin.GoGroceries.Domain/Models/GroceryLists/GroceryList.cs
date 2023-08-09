@@ -1,4 +1,6 @@
-﻿namespace Elwin.GoGroceries.Domain.Models;
+﻿using Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
+
+namespace Elwin.GoGroceries.Domain.Models.GroceryLists;
 
 public class GroceryList : NamedEntity
 {
@@ -20,7 +22,7 @@ public class GroceryList : NamedEntity
     public bool RemoveProduct(GroceryListProduct listProduct)
     {
         return _listProducts.Remove(listProduct);
-    } 
+    }
 
     public void ClearProducts()
     {
@@ -30,5 +32,17 @@ public class GroceryList : NamedEntity
     public bool ValidateProductNotDuplicate(string name, Guid categoryId)
     {
         return _listProducts.Any(lp => lp.Product.Name == name && lp.CategoryId == categoryId);
+    }
+
+    public GroceryListTemplate ToTemplate()
+    {
+        var template = new GroceryListTemplate(this.Name);
+
+        foreach(var listProduct in _listProducts)
+        {
+            template.AddProduct(listProduct.Product, listProduct.CategoryId, listProduct.Quantity, listProduct.Measurement, listProduct.MeasurementQuantity);
+        }
+
+        return template;
     }
 }

@@ -3,14 +3,14 @@
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
 
-@page "/grocerylists/add"
+@page "/templates/add"
 
 <MudPaper Width="100%" Class="pa-4">
 
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Grocery list requires a name!" @bind-Value="dto.Name" Immediate="true"/>
+        <MudTextField T="string" Label="Name" Required="true" RequiredError="Template requires a name!" @bind-Value="dto.Name" Immediate="true"/>
         <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => PostGroceryList()">Add</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => PostTemplate()">Add</MudButton>
         </div>
 
     </MudForm>
@@ -22,15 +22,15 @@
 
     private MudForm? form { get; set; } = new();
 
-    private GroceryListDto dto = new();
+    private TemplateDto dto = new();
 
-    protected async void PostGroceryList()
+    protected async void PostTemplate()
     {
-        var res = await Http.PostAsync("GroceryLists", JsonSerializerHelper.Process(dto));
+        var res = await Http.PostAsync("Templates", JsonSerializerHelper.Process(dto));
 
         if (res.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo($"/");
+            Navigation.NavigateTo($"/templates");
         }
     }
 }
