@@ -1,4 +1,4 @@
-﻿using Elwin.GoGroceries.Domain.Models;
+﻿using Elwin.GoGroceries.Domain.Models.GroceryLists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

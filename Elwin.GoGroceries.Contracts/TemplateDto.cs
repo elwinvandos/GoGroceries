@@ -3,8 +3,8 @@ using Elwin.GoGroceries.Contracts.Product;
 
 namespace Elwin.GoGroceries.Contracts
 {
-    public record GroceryListDto : NamedDtoBase
+    public record TemplateDto : NamedDtoBase
     {
-        public ICollection<ListProductDto>? Products { get; set; }
+        public ICollection<TemplateProductDto>? Products { get; set; }
     }
 }

@@ -11,5 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<GroceriesContext>();
         services.AddScoped<IGroceryRepository, GroceryRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ITemplateRepository, TemplateRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
     }
 }

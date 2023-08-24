@@ -1,4 +1,5 @@
 ﻿@using Elwin.GoGroceries.Contracts;
+@using Elwin.GoGroceries.Contracts.Product;
 @inject NavigationManager Navigation
 
 <ListItemComponent Item="Product" ShowEdit="true" OnEdit="() => OnEdit.InvokeAsync(Product.Id)" OnDelete="() => OnDelete.InvokeAsync(Product.Id)" OnClickListItem="() => OnClickListItem.InvokeAsync(Product.Id)">

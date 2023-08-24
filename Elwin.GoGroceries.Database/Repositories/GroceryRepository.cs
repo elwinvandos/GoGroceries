@@ -1,15 +1,14 @@
 ﻿using Elwin.GoGroceries.Infrastructure.DbContexts;
 using Elwin.GoGroceries.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 
 namespace Elwin.GoGroceries.Infrastructure.Repositories;
 
 public interface IGroceryRepository
 {
     Task<GroceryList> FindAsync(Guid groceryListId);
-    Task<Product> FindItemByNameAsync(string name);
     Task<ICollection<GroceryList>> GetAll();
-    Task<ICollection<Product>> GetAllProducts();
     Task<GroceryList> AddAsync(GroceryList groceryList);
     Task<GroceryList> AddProductAsync(GroceryList groceryList, Product groceryItem, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity);
     Task DeleteAsync(GroceryList groceryList);
@@ -32,23 +31,12 @@ public class GroceryRepository : IGroceryRepository
         return await _context.GroceryLists.ToListAsync();
     }
 
-    public async Task<ICollection<Product>> GetAllProducts()
-    {
-        return await _context.Products.ToListAsync();
-    }
-
     public async Task<GroceryList> FindAsync(Guid listId)
     {
         return await _context.GroceryLists
             .Include(gl => gl.ListProducts)
                 .ThenInclude(lp => lp.Product)
             .SingleOrDefaultAsync(gl => gl.Id == listId) ?? throw new ArgumentNullException(nameof(listId));
-    }
-
-    public async Task<Product> FindItemByNameAsync(string name)
-    {
-        return await _context.Products
-            .SingleOrDefaultAsync(i => i.Name == name);
     }
 
     public async Task<GroceryList> AddAsync(GroceryList groceryList)

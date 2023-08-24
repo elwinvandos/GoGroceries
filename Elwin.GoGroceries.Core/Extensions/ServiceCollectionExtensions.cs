@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IManageGroceryLists, ManageGroceryLists>();
         services.AddScoped<IManageCategories, ManageCategories>();
+        services.AddScoped<IManageTemplates, ManageTemplates>();
     }
 }
 

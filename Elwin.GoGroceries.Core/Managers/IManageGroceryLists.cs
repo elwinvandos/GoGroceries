@@ -1,9 +1,12 @@
 ﻿using Elwin.GoGroceries.Contracts;
 using Elwin.GoGroceries.Contracts.Post;
+using Elwin.GoGroceries.Contracts.Product;
 using Elwin.GoGroceries.Core.Extensions;
 using Elwin.GoGroceries.Domain.Models;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 using Elwin.GoGroceries.Infrastructure.Mappers;
 using Elwin.GoGroceries.Infrastructure.Repositories;
+using System.Collections.Generic;
 
 namespace Elwin.GoGroceries.Core.Managers;
 
@@ -16,6 +19,7 @@ public interface IManageGroceryLists
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
     Task<GroceryListDto> UpdateGroceryListProducts(GroceryListDto groceryListDto);
     Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto);
+    Task ToTemplateAsync(Guid id);
     Task DeleteGroceryListAsync(Guid listId);
     Task<GroceryListDto> RemoveProductFromGroceryListAsync(Guid listId, Guid productId);
 }
@@ -23,12 +27,16 @@ public interface IManageGroceryLists
 public class ManageGroceryLists : IManageGroceryLists
 {
     private readonly IGroceryRepository _groceryRepository;
-    private readonly ICategoryRepository _categoryRepostiroy;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IProductRepository _productRepository;
+    private readonly ITemplateRepository _templateRepository;
 
-    public ManageGroceryLists(IGroceryRepository groceryRepository, ICategoryRepository categoryRepostiroy)
+    public ManageGroceryLists(IGroceryRepository groceryRepository, ICategoryRepository categoryRepostiroy, IProductRepository productRepository, ITemplateRepository templateRepository)
     {
         _groceryRepository = groceryRepository;
-        _categoryRepostiroy = categoryRepostiroy;
+        _categoryRepository = categoryRepostiroy;
+        _productRepository = productRepository;
+        _templateRepository = templateRepository;
     }
 
     public async Task<GroceryListDto> GetGroceryListAsync(Guid id)
@@ -69,7 +77,7 @@ public class ManageGroceryLists : IManageGroceryLists
         if (dto.Category is null || dto.Category.Id == Guid.Empty)
         {
             dto.Category.Name = dto.Category.Name.Capitalize();
-            var category = await _categoryRepostiroy.AddAsync(new Category(dto.Category.Name, dto.Category.ColorCode));
+            var category = await _categoryRepository.AddAsync(new Category(dto.Category.Name, dto.Category.ColorCode));
             categoryId = category.Id;
         }
         else
@@ -77,7 +85,7 @@ public class ManageGroceryLists : IManageGroceryLists
             categoryId = dto.Category.Id;
         }
 
-        var product = await _groceryRepository.FindItemByNameAsync(dto.Name);
+        var product = await _productRepository.FindProductByNameAsync(dto.Name);
 
         if (product is null)
         {
@@ -97,7 +105,7 @@ public class ManageGroceryLists : IManageGroceryLists
     {
         var groceryList = await _groceryRepository.FindAsync(groceryListDto.Id);
 
-        foreach(var productDto in groceryListDto.Products)
+        foreach (var productDto in groceryListDto.Products)
         {
             var product = groceryList.ListProducts.SingleOrDefault(lp => lp.Product.Id == productDto.Id);
             if (product is not null) await _groceryRepository.UpdateProductAsync(groceryList, product.Id, productDto.IsCheckedOff);
@@ -113,7 +121,7 @@ public class ManageGroceryLists : IManageGroceryLists
 
         if (listProduct.Product.Name != productDto.Name)
         {
-            var product = await _groceryRepository.FindItemByNameAsync(productDto.Name);
+            var product = await _productRepository.FindProductByNameAsync(productDto.Name);
 
             if (product is null)
             {
@@ -127,7 +135,7 @@ public class ManageGroceryLists : IManageGroceryLists
                 listProduct = res.ListProducts.Single(lp => lp.Id == listProduct.Id);
             }
 
-            await _groceryRepository.RemoveProductAsync(groceryList ,listProduct);
+            await _groceryRepository.RemoveProductAsync(groceryList, listProduct);
 
         }
         else
@@ -136,6 +144,13 @@ public class ManageGroceryLists : IManageGroceryLists
         }
 
         return ProductMapper.ToDto(listProduct);
+    }
+
+    public async Task ToTemplateAsync(Guid id)
+    {
+        var groceryList = await _groceryRepository.FindAsync(id);
+        var template = groceryList.ToTemplate();
+        await _templateRepository.AddAsync(template);
     }
 
     public async Task DeleteGroceryListAsync(Guid listId)

@@ -1,6 +1,6 @@
 ﻿using Elwin.GoGroceries.Contracts.DtoBases;
 
-namespace Elwin.GoGroceries.Contracts
+namespace Elwin.GoGroceries.Contracts.Product
 {
     public record ProductDto : NamedDtoBase
     {
@@ -8,6 +8,5 @@ namespace Elwin.GoGroceries.Contracts
         public int? Quantity { get; set; }
         public string? Measurement { get; set; }
         public int? MeasurementQuantity { get; set; }
-        public bool IsCheckedOff { get; set; } = false;
     }
 }

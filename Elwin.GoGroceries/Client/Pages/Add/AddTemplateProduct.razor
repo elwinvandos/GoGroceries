@@ -6,10 +6,10 @@
 @using Elwin.GoGroceries.Contracts.Post;
 @using Elwin.GoGroceries.Contracts.Product;
 
-@page "/grocerylist/{id:guid}/add/{categoryId:guid?}"
+@page "/template/{id:guid}/add/{categoryId:guid?}"
 
 <MudPaper Width="100%" Class="pa-4">
-    <ProductForm TItem="ListProductDto" OnSave="Add" CategoryId="CategoryId" ListId="Id">
+    <ProductForm TItem="TemplateProductDto" OnSave="Add" CategoryId="CategoryId" ListId="Id">
         <MudCheckBox @bind-Checked="addAnother" Color="Color.Tertiary" Label="Add another product"></MudCheckBox>
     </ProductForm>
 </MudPaper>
@@ -27,11 +27,11 @@
 
     protected async void Add(PostProductDto dto)
     {
-        var res = await Http.PostAsync($"GroceryLists/{Id}", JsonSerializerHelper.Process(dto));
+        var res = await Http.PostAsync($"templates/{Id}", JsonSerializerHelper.Process(dto));
 
         if (res.IsSuccessStatusCode)
         {
-            if (!addAnother) Navigation.NavigateTo($"/grocerylist/{Id}");
+            if (!addAnother) Navigation.NavigateTo($"/template/{Id}");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Elwin.GoGroceries.Contracts;
 using Elwin.GoGroceries.Contracts.Post;
+using Elwin.GoGroceries.Contracts.Product;
 using Elwin.GoGroceries.Core.Managers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,6 +59,13 @@ public class GroceryListsController : Controller
     public async Task<ActionResult<ProductDto>> PutProductUpdateAsync(Guid listId, PostProductDto dto)
     {
         return await _manageGroceryLists.PutProductUpdate(listId, dto);
+    }
+
+    [HttpPut("toTemplate/{Id}")]
+    public async Task<ActionResult> PutToTemplateAsync(Guid Id)
+    {
+        await _manageGroceryLists.ToTemplateAsync(Id);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

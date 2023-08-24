@@ -5,8 +5,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
-@implements IDisposable
-@page "/grocerylist/{id:guid}"
+@page "/template/{id:guid}"
 
 <style>
     /* MudBlazor overrides don't work in global or scoped css. I haven't managed to figure out why. This is a temporary workaround */
@@ -19,16 +18,15 @@
     }
 </style>
 
-@if (categories is not null & groceryList?.Products is not null)
+@if (categories is not null & template?.Products is not null)
 {
-    @if (groceryList?.Products?.Count() > 0)
+    @if (template?.Products?.Count() > 0)
     {
         <MudPaper Width="100%">
-
             <MudExpansionPanels MultiExpansion="true" Dense="true" DisableGutters="true">
                 @foreach (var category in categories)
                 {
-                    @if (groceryList.Products.Any(i => i.CategoryId == category.Id & !i.IsCheckedOff))
+                    @if (template.Products.Any(i => i.CategoryId == category.Id))
                     {
                         <MudExpansionPanel IsInitiallyExpanded="true" Style="@($"background-color: {category.ColorCode};")" Class="custom-panel-header">
                             <TitleContent>
@@ -42,31 +40,20 @@
                             </TitleContent>
                             <ChildContent>
                                 <ul>
-                                    @foreach (var item in groceryList.Products.Where(i => i.CategoryId == category.Id & !i.IsCheckedOff))
+                                    @foreach (var item in template.Products.Where(i => i.CategoryId == category.Id))
                                     {
-                                        <ListProductComponent Product="item" OnEdit="EditProduct" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
+                                        <ListProductComponent Product="item" OnEdit="EditProduct" OnDelete="Delete"></ListProductComponent>
                                     }
                                 </ul>
                             </ChildContent>
                         </MudExpansionPanel>
                     }
                 }
-                @if (checkedOffProducts.Count() > 0)
-                {
-                    <MudExpansionPanel Text="Checked off products" Class="custom-panel-header">
-                        <ul style="text-decoration: line-through">
-                            @foreach (var item in checkedOffProducts)
-                            {
-                                <ListProductComponent Product="item" OnDelete="Delete" OnClickListItem="ClickListItem"></ListProductComponent>
-                            }
-                        </ul>
-                    </MudExpansionPanel>
-                }
             </MudExpansionPanels>
         </MudPaper>
         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
             <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="() => AddNew()">Add product</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.DocumentScanner" Size="Size.Small" OnClick="() => ToTemplate()">Create template</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.LocalGroceryStore" Size="Size.Small" OnClick="() => ToGroceryList()">Create grocery list</MudButton>
         </div>
     }
     else
@@ -81,69 +68,51 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    private GroceryListDto groceryList { get; set; } = new() { Products = new List<ListProductDto>() };
+    private TemplateDto template { get; set; } = new() { Products = new List<TemplateProductDto>() };
     private IEnumerable<CategoryDto>? categories { get; set; }
-
-    private IEnumerable<ProductDto> checkedOffProducts => groceryList.Products.Where(i => i.IsCheckedOff);
-
-    private PeriodicTimer timer;
 
     protected override async Task OnInitializedAsync()
     {
         var categoriesRes = await Http.GetAsync($"Categories");
         categories = await HttpResultHelper.Process(categoriesRes, () => categoriesRes.Content.ReadFromJsonAsync<IEnumerable<CategoryDto>>());
 
-        var groceryListRes = await Http.GetAsync($"GroceryLists/{Id}");
-        groceryList = await HttpResultHelper.Process(groceryListRes, () => groceryListRes.Content.ReadFromJsonAsync<GroceryListDto>());
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // Only execute following code on first render or we block our component rendering cycle
-        if (firstRender)
-        {
-            timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-
-            while (await timer.WaitForNextTickAsync())
-            {
-                await SaveGroceryList();
-            }
-        }
+        var groceryListRes = await Http.GetAsync($"Templates/{Id}");
+        template = await HttpResultHelper.Process(groceryListRes, () => groceryListRes.Content.ReadFromJsonAsync<TemplateDto>());
     }
 
     protected void AddNew()
     {
-        Navigation.NavigateTo($"/groceryList/{Id}/add");
+        Navigation.NavigateTo($"/template/{Id}/add");
     }
 
     protected void AddNew(Guid categoryId)
     {
-        Navigation.NavigateTo($"/groceryList/{Id}/add/{categoryId}");
+        Navigation.NavigateTo($"/template/{Id}/add/{categoryId}");
     }
 
-    protected async void ToTemplate()
+    protected async void ToGroceryList()
     {
-        var dialogRes = await DialogService.ShowMessageBox("Create template", "Do you want to create a template from this list?", yesText: "Yes", cancelText: "No");
+        var dialogRes = await DialogService.ShowMessageBox("Create grocery list", "Do you want to create a new grocery list from this template?", yesText: "Yes", cancelText: "No");
 
         if (dialogRes is true)
         {
-            var res = await Http.PutAsync($"GroceryLists/toTemplate/{Id}", null);
+            var res = await Http.PutAsync($"templates/toGroceryList/{Id}", null);
 
             if (res.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo($"/templates");
+                Navigation.NavigateTo($"/");
             }
         }
     }
 
-    protected void EditCategory(Guid id)
+    protected async void EditCategory(Guid id)
     {
         Navigation.NavigateTo($"/categories/{id}");
     }
 
-    protected void EditProduct(Guid productId)
+    protected async void EditProduct(Guid productId)
     {
-        Navigation.NavigateTo($"/{Id}/listProducts/{productId}");
+        Navigation.NavigateTo($"/{Id}/templateProducts/{productId}");
     }
 
     protected async Task Delete(Guid productId)
@@ -152,32 +121,19 @@
 
         if (dialogRes is true)
         {
-            var res = await Http.DeleteAsync($"GroceryLists/{Id}/{productId}");
+            var res = await Http.DeleteAsync($"templates/{Id}/{productId}");
 
             if (res.IsSuccessStatusCode)
             {
-                groceryList?.Products?.Remove(groceryList.Products.Single(i => i.Id == productId));
+                template?.Products?.Remove(template.Products.Single(i => i.Id == productId));
                 StateHasChanged();
             }
         }
     }
 
-    protected void ClickListItem(Guid productId)
-    {
-        var product = groceryList?.Products?.Single(i => i.Id == productId);
-        product.IsCheckedOff = !product.IsCheckedOff;
-        StateHasChanged();
-    }
-
-    public async void Dispose()
-    {
-        timer.Dispose();
-        await SaveGroceryList();
-    }
-
     public async Task SaveGroceryList()
     {
-        var res = await Http.PutAsync($"GroceryLists", JsonSerializerHelper.Process(groceryList));
+        var res = await Http.PutAsync($"Templates", JsonSerializerHelper.Process(template));
 
         if (!res.IsSuccessStatusCode)
         {
