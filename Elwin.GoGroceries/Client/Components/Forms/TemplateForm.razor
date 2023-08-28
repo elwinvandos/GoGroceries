@@ -1,0 +1,21 @@
+﻿@using Elwin.GoGroceries.Contracts;
+
+<MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+    <MudTextField T="string" Label="Name" Required="true" RequiredError="Template requires a name!" @bind-Value="Template.Name" Immediate="true" />
+    <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => OnSave.InvokeAsync(Template)">Save</MudButton>
+    </div>
+</MudForm>
+
+@code {
+    [Parameter]
+    public EventCallback<TemplateDto> OnSave { get; set; }
+
+    [Parameter]
+    public TemplateDto Template { get; set; } = new();
+
+    private bool success { get; set; } = false;
+    private string[] errors { get; set; } = { };
+
+    private MudForm? form { get; set; } = new();
+}

@@ -7,7 +7,9 @@
 @page "/templates"
 
 <MudPaper Width="100%">
-    <ListComponent Items="templates" OnAdd="AddNew" OnDelete="Delete" OnClickListItem="GoToTemplate"></ListComponent>
+    <MudText Typo="Typo.h6" Align="Align.Center">Templates</MudText>
+    <MudDivider></MudDivider>
+    <ListComponent Items="templates" ShowEdit="true" OnAdd="AddNew" OnEdit="Edit" OnDelete="Delete" OnClickListItem="GoToTemplate"></ListComponent>
 </MudPaper>
 
 @code {
@@ -43,4 +45,9 @@
             }
         }
     }
+    protected void Edit(Guid id)
+    {
+        Navigation.NavigateTo($"/templates/{id}");
+    }
+
 }

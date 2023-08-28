@@ -1,30 +1,17 @@
 ﻿@inject HttpClient Http
 @inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
 @using Elwin.GoGroceries.Client.Helpers;
 @using Elwin.GoGroceries.Contracts;
 
 @page "/grocerylists/add"
 
 <MudPaper Width="100%" Class="pa-4">
-
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField T="string" Label="Name" Required="true" RequiredError="Grocery list requires a name!" @bind-Value="dto.Name" Immediate="true"/>
-        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
-            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => PostGroceryList()">Add</MudButton>
-        </div>
-
-    </MudForm>
+    <GroceryListForm OnSave="Add"></GroceryListForm>
 </MudPaper>
 
 @code {
-    private bool success { get; set; } = false;
-    private string[] errors { get; set; } = { };
-
-    private MudForm? form { get; set; } = new();
-
-    private GroceryListDto dto = new();
-
-    protected async void PostGroceryList()
+    protected async void Add(GroceryListDto dto)
     {
         var res = await Http.PostAsync("GroceryLists", JsonSerializerHelper.Process(dto));
 

@@ -7,7 +7,9 @@
 @page "/"
 
 <MudPaper Width="100%">
-    <ListComponent Items="groceryLists" OnAdd="AddNew" OnDelete="Delete" OnClickListItem="GoToGroceryList"></ListComponent>
+    <MudText Typo="Typo.h6" Align="Align.Center">Grocery Lists</MudText>
+    <MudDivider></MudDivider>
+    <ListComponent Items="groceryLists" ShowEdit="true" OnAdd="AddNew" OnEdit="Edit" OnDelete="Delete" OnClickListItem="GoToGroceryList"></ListComponent>
 </MudPaper>
 
 @code {
@@ -21,7 +23,7 @@
         StateHasChanged();
     }
 
-    protected async Task GoToGroceryList(Guid id)
+    protected void GoToGroceryList(Guid id)
     {
         Navigation.NavigateTo($"/grocerylist/{id}");
     }
@@ -42,5 +44,10 @@
                 StateHasChanged();
             }
         }
+    }
+
+    protected void Edit(Guid id)
+    {
+        Navigation.NavigateTo($"/grocerylists/{id}");
     }
 }

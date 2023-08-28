@@ -12,6 +12,7 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
         Task<GroceryListTemplate> AddAsync(GroceryListTemplate template);
         Task DeleteAsync(GroceryListTemplate template);
         Task<GroceryListTemplate> AddProductAsync(GroceryListTemplate template, Product product, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity);
+        Task<GroceryListTemplate> UpdateAsync(GroceryListTemplate template, string name);
         Task<GroceryListTemplateProduct> UpdateProductAsync(GroceryListTemplate template, Guid productId, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity);
         Task<GroceryListTemplate> RemoveProductAsync(GroceryListTemplate template, GroceryListTemplateProduct templateProduct);
     }
@@ -51,6 +52,14 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return template;
         }
+
+        public async Task<GroceryListTemplate> UpdateAsync(GroceryListTemplate template, string name)
+        {
+            template.UpdateName(name);
+            await _context.SaveChangesAsync();
+            return template;
+        }
+
         public async Task<GroceryListTemplateProduct> UpdateProductAsync(GroceryListTemplate template, Guid productId, Guid categoryId, int? quantity, string? measurement, int? measurementQuantity)
         {
             var templateProduct = template.TemplateProducts.Single(lp => lp.Id == productId);

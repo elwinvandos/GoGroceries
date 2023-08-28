@@ -17,7 +17,7 @@ public interface IManageGroceryLists
     Task<bool> DoesListProductExistAsync(Guid listId, string name, Guid categoryId);
     Task<GroceryListDto> AddGroceryListAsync(GroceryListDto dto);
     Task<GroceryListDto> AddProductToListAsync(Guid listId, PostProductDto dto);
-    Task<GroceryListDto> UpdateGroceryListProducts(GroceryListDto groceryListDto);
+    Task<GroceryListDto> UpdateGroceryList(GroceryListDto groceryListDto);
     Task<ProductDto> PutProductUpdate(Guid groceryListId, PostProductDto productDto);
     Task ToTemplateAsync(Guid id);
     Task DeleteGroceryListAsync(Guid listId);
@@ -101,9 +101,14 @@ public class ManageGroceryLists : IManageGroceryLists
         return GroceryListMapper.ToDto(groceryList);
     }
 
-    public async Task<GroceryListDto> UpdateGroceryListProducts(GroceryListDto groceryListDto)
+    public async Task<GroceryListDto> UpdateGroceryList(GroceryListDto groceryListDto)
     {
         var groceryList = await _groceryRepository.FindAsync(groceryListDto.Id);
+
+        if (groceryList.Name != groceryListDto.Name)
+        {
+            groceryList = await _groceryRepository.UpdateAsync(groceryList, groceryListDto.Name);
+        }
 
         foreach (var productDto in groceryListDto.Products)
         {

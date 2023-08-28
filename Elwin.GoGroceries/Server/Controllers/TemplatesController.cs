@@ -50,6 +50,12 @@ namespace Elwin.GoGroceries.API.Controllers
             return await _manageTemplates.AddProductToTemplateAsync(id, dto);
         }
 
+        [HttpPut]
+        public async Task<ActionResult<TemplateDto>> PutTemplateUpdateAsync(TemplateDto dto)
+        {
+            return await _manageTemplates.PutTemplateUpdateAsync(dto);
+        }
+
         [HttpPut("product/{Id}")]
         public async Task<ActionResult<TemplateProductDto>> PutProductUpdateAsync(Guid Id, PostProductDto dto)
         {

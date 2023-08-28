@@ -1,0 +1,34 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Elwin.GoGroceries.Client.Components.Forms
+@using Elwin.GoGroceries.Client.Helpers;
+@using Elwin.GoGroceries.Contracts;
+
+@page "/templates/{id:guid}"
+
+<MudPaper Width="100%" Class="pa-4">
+    <TemplateForm Template="template" OnSave="Update"></TemplateForm>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private TemplateDto? template { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Http.GetAsync($"Templates/{Id}");
+        template = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<TemplateDto>());
+    }
+
+    protected async void Update(TemplateDto dto)
+    {
+        var res = await Http.PutAsync("Templates", JsonSerializerHelper.Process(dto));
+
+        if (res.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"/templates");
+        }
+    }
+}

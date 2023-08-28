@@ -16,6 +16,7 @@ namespace Elwin.GoGroceries.Core.Managers
         Task<bool> DoesTemplateProductExistAsync(Guid templateId, string name, Guid categoryId);
         Task<TemplateDto> AddTemplateAsync(TemplateDto templateDto);
         Task<TemplateDto> AddProductToTemplateAsync(Guid templateId, PostProductDto productDto);
+        Task<TemplateDto> PutTemplateUpdateAsync(TemplateDto templateDto);
         Task<TemplateProductDto> PutProductUpdate(Guid templateId, PostProductDto productDto);
         Task ToGroceryListAsync(Guid id);
         Task DeleteTemplateAsync(Guid templateId);
@@ -97,6 +98,19 @@ namespace Elwin.GoGroceries.Core.Managers
             }
 
             return TemplateMapper.ToDto(template);
+        }
+
+        public async Task<TemplateDto> PutTemplateUpdateAsync(TemplateDto templateDto)
+        {
+            if (string.IsNullOrEmpty(templateDto.Name)) throw new ArgumentNullException(nameof(templateDto));
+
+            var template = await _templateRepository.FindAsync(templateDto.Id);
+
+            if (template is null) throw new ArgumentNullException(nameof(templateDto));
+
+            var res = await _templateRepository.UpdateAsync(template, templateDto.Name);
+
+            return TemplateMapper.ToDto(res);
         }
 
         public async Task<TemplateProductDto> PutProductUpdate(Guid templateId, PostProductDto productDto)

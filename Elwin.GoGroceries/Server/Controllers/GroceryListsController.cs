@@ -46,7 +46,7 @@ public class GroceryListsController : Controller
     [HttpPut]
     public async Task<ActionResult<GroceryListDto>> PutGroceryListUpdateAsync(GroceryListDto dto)
     {
-        return await _manageGroceryLists.UpdateGroceryListProducts(dto);
+        return await _manageGroceryLists.UpdateGroceryList(dto);
     }
 
     [HttpPost("{id}")]
