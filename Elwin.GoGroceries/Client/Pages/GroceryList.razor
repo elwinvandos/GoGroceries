@@ -24,7 +24,8 @@
     @if (groceryList?.Products?.Count() > 0)
     {
         <MudPaper Width="100%">
-
+            <MudText Typo="Typo.h6" Align="Align.Center">@groceryList.Name</MudText>
+            <MudDivider></MudDivider>
             <MudExpansionPanels MultiExpansion="true" Dense="true" DisableGutters="true">
                 @foreach (var category in categories)
                 {
