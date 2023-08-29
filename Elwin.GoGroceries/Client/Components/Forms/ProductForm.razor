@@ -15,14 +15,7 @@
     {
         <MudNumericField @bind-Value="PostProduct.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
     }
-    <MudSelect T="CategoryDto" Label="Category" @bind-Value="PostProduct.Category" Style="margin-top: 1rem;">
-        @foreach (var category in categories)
-        {
-            <MudSelectItem Value="category"></MudSelectItem>
-        }
-    </MudSelect>
-    <MudTextField T="string" Label="Category name" Required="true" RequiredError="Product must have a category!"
-                  HelperText="If you couldn't find your category, enter a new one here" @bind-Value="PostProduct.Category.Name" Immediate="true" />
+    <SearchBox Label="Search or enter new category" Items="categories" InputCategory="PostProduct.Category"></SearchBox>
     @if (!string.IsNullOrEmpty(PostProduct.Category.Name))
     {
         <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="PostProduct.Category.ColorCode" Style="@($"color: {PostProduct.Category.ColorCode};")"
