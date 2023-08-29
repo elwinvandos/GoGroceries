@@ -1,4 +1,6 @@
-﻿namespace Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
+﻿using Elwin.GoGroceries.Domain.Models.Base;
+
+namespace Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
 
 public class GroceryListTemplate : NamedEntity
 {

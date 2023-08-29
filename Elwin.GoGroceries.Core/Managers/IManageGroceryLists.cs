@@ -82,7 +82,10 @@ public class ManageGroceryLists : IManageGroceryLists
         }
         else
         {
+            var category = await _categoryRepository.FindAsync(dto.Category.Id);
+            if (category == null) throw new ArgumentNullException(nameof(dto.Category));
             categoryId = dto.Category.Id;
+            await _categoryRepository.IncreaseUserWeight(category);
         }
 
         var product = await _productRepository.FindProductByNameAsync(dto.Name);
@@ -96,6 +99,7 @@ public class ManageGroceryLists : IManageGroceryLists
         else
         {
             await _groceryRepository.AddProductAsync(groceryList, product, dto.Category.Id, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
+            await _productRepository.IncreaseUserWeight(product);
         }
 
         return GroceryListMapper.ToDto(groceryList);

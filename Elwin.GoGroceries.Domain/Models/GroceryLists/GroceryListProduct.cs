@@ -1,4 +1,6 @@
-﻿namespace Elwin.GoGroceries.Domain.Models.GroceryLists;
+﻿using Elwin.GoGroceries.Domain.Models.Base;
+
+namespace Elwin.GoGroceries.Domain.Models.GroceryLists;
 
 public class GroceryListProduct : Entity
 {

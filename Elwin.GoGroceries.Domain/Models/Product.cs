@@ -1,9 +1,10 @@
-﻿using Elwin.GoGroceries.Domain.Models.GroceryLists;
+﻿using Elwin.GoGroceries.Domain.Models.Base;
+using Elwin.GoGroceries.Domain.Models.GroceryLists;
 using Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
 
 namespace Elwin.GoGroceries.Domain.Models;
 
-public class Product : NamedEntity
+public class Product : WeightedEntity
 {
     private readonly List<GroceryListProduct> _listProducts = new();
     public virtual IReadOnlyCollection<GroceryListProduct>? ListProducts => _listProducts;
