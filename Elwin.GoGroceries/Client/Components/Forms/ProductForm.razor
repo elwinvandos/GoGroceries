@@ -15,8 +15,8 @@
     {
         <MudNumericField @bind-Value="PostProduct.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
     }
-    <SearchBox Label="Search or enter new category" Items="categories" InputCategory="PostProduct.Category"></SearchBox>
-    @if (!string.IsNullOrEmpty(PostProduct.Category.Name))
+    <SearchBox Label="Search or enter new category" Items="categories" InputCategory="PostProduct.Category" @bind-value="PostProduct.Category"></SearchBox>
+    @if (PostProduct.Category is not null)
     {
         <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="PostProduct.Category.ColorCode" Style="@($"color: {PostProduct.Category.ColorCode};")"
                     Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum" />
@@ -32,7 +32,7 @@
     public Guid ListId { get; set; }
 
     [Parameter]
-    public TItem? Product { get; set; }
+    public TItem Product { get; set; }
 
     [Parameter]
     public Guid? CategoryId { get; set; }
@@ -55,7 +55,7 @@
         var res = await Http.GetAsync($"Categories");
         categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
 
-        if (Product is not null)
+        if (Product.Id != Guid.Empty)
         {
             PostProduct = new PostProductDto()
                 {

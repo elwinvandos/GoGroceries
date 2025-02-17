@@ -9,7 +9,7 @@
 @page "/template/{id:guid}/add/{categoryId:guid?}"
 
 <MudPaper Width="100%" Class="pa-4">
-    <ProductForm TItem="TemplateProductDto" OnSave="Add" CategoryId="CategoryId" ListId="Id">
+    <ProductForm TItem="TemplateProductDto" OnSave="Add" CategoryId="CategoryId" ListId="Id" Product="new TemplateProductDto()">
         <MudCheckBox @bind-Checked="addAnother" Color="Color.Tertiary" Label="Add another product"></MudCheckBox>
     </ProductForm>
 </MudPaper>

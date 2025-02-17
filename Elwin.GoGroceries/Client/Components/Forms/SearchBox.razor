@@ -3,7 +3,7 @@
 @typeparam TItem where TItem : WeightedDtoBase
 
 <MudAutocomplete T="TItem" Label="@Label" @bind-Value="selectedValue" SearchFunc="@Search"
-                 ResetValueOnEmptyText="true" CoerceValue="true" ToStringFunc="@(i => i.Name)" />
+                 ResetValueOnEmptyText="true" CoerceValue="true" CoerceText="true" ToStringFunc="@(i => i.Name)" />
 
 @code {
     [Parameter]
@@ -30,6 +30,7 @@
     private async Task<IEnumerable<TItem>> Search(string value)
     {
         if (string.IsNullOrEmpty(value)) return Items;
+
         return Items.Where(i => i.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 }
