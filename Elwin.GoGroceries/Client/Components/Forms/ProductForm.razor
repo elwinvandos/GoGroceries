@@ -79,7 +79,9 @@
     {
         if (!string.IsNullOrEmpty(name) && Product?.Name != name)
         {
-            var apiController = Product is ListProductDto ? "GroceryLists" : "Templates";
+            var currentUrl = Navigation.Uri.ToString();
+            // Hacky solution, have a look at this in the future
+            var apiController = currentUrl.Contains("groceryList") ? "GroceryLists" : "Templates";
             var res = await Http.GetAsync($"{apiController}/checkProductExists/{ListId}/" + Uri.EscapeDataString(name) + $"/{PostProduct.Category.Id}");
             var exists = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<bool>());
 
