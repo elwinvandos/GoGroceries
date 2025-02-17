@@ -15,12 +15,7 @@
     {
         <MudNumericField @bind-Value="PostProduct.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
     }
-    <SearchBox Label="Search or enter new category" Items="categories" InputCategory="PostProduct.Category" @bind-value="PostProduct.Category"></SearchBox>
-    @if (PostProduct.Category is not null)
-    {
-        <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="PostProduct.Category.ColorCode" Style="@($"color: {PostProduct.Category.ColorCode};")"
-                    Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum" />
-    }
+    <SearchBox Label="Search category" Items="categories" InputCategory="PostProduct.Category"></SearchBox>
     <div style="display: flex; align-items: center; margin-top: 0.5rem;">
         <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Save(PostProduct)">Save</MudButton>
         @ChildContent
