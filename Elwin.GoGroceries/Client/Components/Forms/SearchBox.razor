@@ -1,0 +1,36 @@
+﻿@using Elwin.GoGroceries.Contracts.DtoBases;
+
+@typeparam TItem where TItem : WeightedDtoBase
+
+<MudAutocomplete T="TItem" Label="@Label" @bind-Value="selectedValue" SearchFunc="@Search"
+                 ResetValueOnEmptyText="true" CoerceValue="true" CoerceText="true" ToStringFunc="@(i => i.Name)" />
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem> Items { get; set; } = null!;
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public TItem? InputCategory { get; set; }
+
+    private TItem selectedValue;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Items = Items.OrderBy(i => i.UserWeight);
+
+        // This method is called every time we interact with the MudAutocomplete component, 
+        // so we need this check to prevent selectedValue from being overwritten
+        // This behavior does not seem intended, investigation needed
+        if (InputCategory != null && selectedValue == null) selectedValue = InputCategory;
+    }
+
+    private async Task<IEnumerable<TItem>> Search(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return Items;
+
+        return Items.Where(i => i.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+}

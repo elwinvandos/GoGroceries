@@ -1,6 +1,8 @@
-﻿namespace Elwin.GoGroceries.Domain.Models
+﻿using Elwin.GoGroceries.Domain.Models.Base;
+
+namespace Elwin.GoGroceries.Domain.Models
 {
-    public class Category : NamedEntity
+    public class Category : WeightedEntity
     {
         public string? ColorCode { get; private set; }
 

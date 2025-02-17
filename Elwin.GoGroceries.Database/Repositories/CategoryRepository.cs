@@ -10,6 +10,7 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
         Task<Category> FindAsync(Guid categoryId);
         Task<Category> AddAsync(Category category);
         Task<Category> UpdateAsync(Category category);
+        Task IncreaseUserWeight(Category category);
         Task DeleteAsync(Category category);
     }
 
@@ -45,6 +46,12 @@ namespace Elwin.GoGroceries.Infrastructure.Repositories
             var res = _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             return res.Entity;
+        }
+
+        public async Task IncreaseUserWeight(Category category)
+        {
+            category.IncreaseUserWeight();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Category category)

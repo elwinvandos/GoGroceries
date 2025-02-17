@@ -2,7 +2,7 @@
 
 namespace Elwin.GoGroceries.Contracts
 {
-    public record CategoryDto : NamedDtoBase
+    public record CategoryDto : WeightedDtoBase
     {
         public string? ColorCode { get; set; }
 

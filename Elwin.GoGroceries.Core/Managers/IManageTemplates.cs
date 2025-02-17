@@ -81,7 +81,10 @@ namespace Elwin.GoGroceries.Core.Managers
             }
             else
             {
+                var category = await _categoryRepository.FindAsync(dto.Category.Id);
+                if (category == null) throw new ArgumentNullException(nameof(dto.Category));
                 categoryId = dto.Category.Id;
+                await _categoryRepository.IncreaseUserWeight(category);
             }
 
             var product = await _productRepository.FindProductByNameAsync(dto.Name);
@@ -95,6 +98,7 @@ namespace Elwin.GoGroceries.Core.Managers
             else
             {
                 await _templateRepository.AddProductAsync(template, product, dto.Category.Id, dto.Quantity, dto.Measurement, dto.MeasurementQuantity);
+                await _productRepository.IncreaseUserWeight(product);
             }
 
             return TemplateMapper.ToDto(template);

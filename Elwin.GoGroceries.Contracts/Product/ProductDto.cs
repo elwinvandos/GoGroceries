@@ -2,7 +2,7 @@
 
 namespace Elwin.GoGroceries.Contracts.Product
 {
-    public record ProductDto : NamedDtoBase
+    public record ProductDto : WeightedDtoBase
     {
         public Guid CategoryId { get; set; }
         public int? Quantity { get; set; }

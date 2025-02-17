@@ -1,4 +1,4 @@
-﻿namespace Elwin.GoGroceries.Domain.Models
+﻿namespace Elwin.GoGroceries.Domain.Models.Base
 {
     public abstract class NamedEntity : Entity
     {

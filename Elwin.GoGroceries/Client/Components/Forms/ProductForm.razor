@@ -15,19 +15,7 @@
     {
         <MudNumericField @bind-Value="PostProduct.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
     }
-    <MudSelect T="CategoryDto" Label="Category" @bind-Value="PostProduct.Category" Style="margin-top: 1rem;">
-        @foreach (var category in categories)
-        {
-            <MudSelectItem Value="category"></MudSelectItem>
-        }
-    </MudSelect>
-    <MudTextField T="string" Label="Category name" Required="true" RequiredError="Product must have a category!"
-                  HelperText="If you couldn't find your category, enter a new one here" @bind-Value="PostProduct.Category.Name" Immediate="true" />
-    @if (!string.IsNullOrEmpty(PostProduct.Category.Name))
-    {
-        <MudColorPicker Label="Category color" HelperText="Optionally, pick a color for this category." @bind-Text="PostProduct.Category.ColorCode" Style="@($"color: {PostProduct.Category.ColorCode};")"
-                    Placeholder="Pick a color" ColorPickerView="ColorPickerView.Spectrum" />
-    }
+    <SearchBox Label="Search category" Items="categories" InputCategory="PostProduct.Category"></SearchBox>
     <div style="display: flex; align-items: center; margin-top: 0.5rem;">
         <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Save(PostProduct)">Save</MudButton>
         @ChildContent
@@ -39,7 +27,7 @@
     public Guid ListId { get; set; }
 
     [Parameter]
-    public TItem? Product { get; set; }
+    public TItem Product { get; set; }
 
     [Parameter]
     public Guid? CategoryId { get; set; }
@@ -62,7 +50,7 @@
         var res = await Http.GetAsync($"Categories");
         categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
 
-        if (Product is not null)
+        if (Product.Id != Guid.Empty)
         {
             PostProduct = new PostProductDto()
                 {

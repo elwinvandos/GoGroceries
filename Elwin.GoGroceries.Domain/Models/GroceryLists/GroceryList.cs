@@ -1,4 +1,5 @@
-﻿using Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
+﻿using Elwin.GoGroceries.Domain.Models.Base;
+using Elwin.GoGroceries.Domain.Models.GroceryLists.Templates;
 
 namespace Elwin.GoGroceries.Domain.Models.GroceryLists;
 
