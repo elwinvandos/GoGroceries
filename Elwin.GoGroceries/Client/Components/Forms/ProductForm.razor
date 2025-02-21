@@ -8,14 +8,14 @@
 @typeparam TItem where TItem : ProductDto
 
 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-    <MudTextField T="string" Label="Name" Required="true" RequiredError="Shopping item requires a name!" @bind-Value="PostProduct.Name" Validation="@(new Func<string, Task<string>>(CheckProductDuplicate))" />
+    <MudTextField T="string" Label="Name" Required="true" RequiredError="Product requires a name!" @bind-Value="PostProduct.Name" Validation="@(new Func<string, Task<string>>(CheckProductDuplicate))" />
     <MudNumericField @bind-Value="PostProduct.Quantity" Label="Quantity" Variant="Variant.Text" Min="1" Max="100" />
     <MudTextField T="string" Label="Measurement" HelperText="For example: '400g' or 'cartons'" @bind-Value="PostProduct.Measurement" />
     @if (!string.IsNullOrEmpty(PostProduct.Measurement))
     {
         <MudNumericField @bind-Value="PostProduct.MeasurementQuantity" Label="Quantity in measurement" HelperText="For example: 12 (eggs in a carton)" Variant="Variant.Text" Min="1" Max="1000" />
     }
-    <SearchBox Label="Search category" Items="categories" InputCategory="PostProduct.Category"></SearchBox>
+    <SearchBox Label="Search category" Items="categories" @bind-SelectedValue="PostProduct.Category" RequiredError="Product must have a category!"></SearchBox>
     <div style="display: flex; align-items: center; margin-top: 0.5rem;">
         <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Disabled="@(!success)" Class="mr-auto" OnClick="() => Save(PostProduct)">Save</MudButton>
         @ChildContent
@@ -50,7 +50,7 @@
         var res = await Http.GetAsync($"Categories");
         categories = await HttpResultHelper.Process(res, () => res.Content.ReadFromJsonAsync<ICollection<CategoryDto>>());
 
-        if (Product.Id != Guid.Empty)
+        if (Product is not null)
         {
             PostProduct = new PostProductDto()
                 {

@@ -2,29 +2,43 @@
 
 @typeparam TItem where TItem : WeightedDtoBase
 
-<MudAutocomplete T="TItem" Label="@Label" @bind-Value="selectedValue" SearchFunc="@Search"
-                 ResetValueOnEmptyText="true" CoerceValue="true" CoerceText="true" ToStringFunc="@(i => i.Name)" />
+<MudAutocomplete 
+    T="TItem" 
+    Label="@Label" 
+    @bind-Value="selectedValue" 
+    SearchFunc="@Search" 
+    Required="RequiredError is not null ? true : false" 
+    RequiredError="@RequiredError"
+    ResetValueOnEmptyText="true" 
+    CoerceValue="true" 
+    CoerceText="true" 
+    ToStringFunc="@(i => i.Name)" />
 
 @code {
     [Parameter]
     public IEnumerable<TItem> Items { get; set; } = null!;
 
     [Parameter]
-    public string Label { get; set; }
+    public string Label { get; set; } = null!;
 
     [Parameter]
-    public TItem? InputCategory { get; set; }
+    public TItem? SelectedValue { get; set; }
 
-    private TItem selectedValue;
+    [Parameter]
+    public EventCallback<TItem> SelectedValueChanged { get; set; }
+
+    [Parameter]
+    public string? RequiredError { get; set; }
+
+    private TItem selectedValue
+    {
+        get => SelectedValue;
+        set => SelectedValueChanged.InvokeAsync(value);
+    }
 
     protected override async Task OnParametersSetAsync()
     {
         Items = Items.OrderBy(i => i.UserWeight);
-
-        // This method is called every time we interact with the MudAutocomplete component, 
-        // so we need this check to prevent selectedValue from being overwritten
-        // This behavior does not seem intended, investigation needed
-        if (InputCategory != null && selectedValue == null) selectedValue = InputCategory;
     }
 
     private async Task<IEnumerable<TItem>> Search(string value)
