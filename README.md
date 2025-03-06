@@ -1,4 +1,4 @@
-A simple, mobile-first household groceries management app developed according to the principles of Clean Architecture and DDD
+A simple, mobile-first household groceries management app.
 
 Demo available at https://gogroceries.azurewebsites.net/
 
