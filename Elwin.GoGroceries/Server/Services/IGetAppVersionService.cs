@@ -10,6 +10,6 @@ namespace Elwin.GoGroceries.API.Services
     public class GetAppVersionService : IGetAppVersionService
     {
         public string Version =>
-            Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion ?? string.Empty;
+            Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty;
     }
 }
