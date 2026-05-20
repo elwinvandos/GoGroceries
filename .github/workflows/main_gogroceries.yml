@@ -55,3 +55,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9FCB2863A8644B5F866D7F80FE1DF3A3 }}
           package: .
+          app-settings-json: '[{"name": "InfrastructureSettings__ConnectionString", "value": "${{ secrets.CONNECTIONSTRING }}", "slotSetting": false}]'
